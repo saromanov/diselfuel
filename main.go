@@ -20,6 +20,14 @@ func main() {
 					return nil
 				},
 			},
+			{
+				Name:    "exec",
+				Aliases: []string{"e"},
+				Usage:   "Excecution of the command",
+				Action: func(c *cli.Context) error {
+					return nil
+				},
+			},
 		},
 	}
 
