@@ -3,9 +3,25 @@ package main
 import (
 	"os"
 
+	"github.com/saromanov/diselfuel/internal/config"
+	"github.com/saromanov/diselfuel/internal/server"
 	"github.com/urfave/cli/v2"
 )
 
+func start(c *cli.Context) error {
+	conf, err := config.Load("config.yaml")
+	if err != nil {
+		panic(err)
+	}
+
+	serv, err := server.New(conf)
+	if err != nil {
+		panic(err)
+	}
+
+	serv.Start()
+	return nil
+}
 func main() {
 	app := &cli.App{
 		Name:  "diselfuel",
@@ -15,9 +31,7 @@ func main() {
 				Name:    "start",
 				Aliases: []string{"i"},
 				Usage:   "starting of the server",
-				Action: func(c *cli.Context) error {
-					return nil
-				},
+				Action:  start,
 			},
 			{
 				Name:    "exec",

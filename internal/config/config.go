@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"io/ioutil"
 	"gopkg.in/yaml.v2"
 )
@@ -26,7 +27,7 @@ func Load(path string)(*Config, error) {
 	}
 
 	c := &Config{}
-	err := yaml.Unmarshal([]byte(data), &c)
+	err = yaml.Unmarshal([]byte(data), &c)
 	if err != nil {
 			return nil, fmt.Errorf("unable to unmarshal config file: %v", err)
 	}
