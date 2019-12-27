@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/saromanov/diselfuel/internal/config"
-	"github.com/saromanov/diselfuel/internal/service"
+	"github.com/saromanov/diselfuel/internal/app"
 	"github.com/urfave/cli/v2"
 )
 
@@ -14,12 +14,12 @@ func start(c *cli.Context) error {
 		panic(err)
 	}
 
-	serv, err := service.New(conf)
+	a, err := app.New(conf)
 	if err != nil {
 		panic(err)
 	}
 
-	serv.Start()
+	a.Start()
 	return nil
 }
 func main() {
