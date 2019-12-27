@@ -1,8 +1,11 @@
 package server
 
 import (
+	"log"
 	"net/http"
+	"os"
 
+	lucio "github.com/arriqaaq/server"
 	"github.com/go-chi/chi"
 	"github.com/saromanov/diselfuel/internal/config"
 )
@@ -13,5 +16,7 @@ func New(c *config.Config) {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("yes"))
 	})
-	http.ListenAndServe(":3000", r)
+	server := lucio.NewServer(r, "0.0.0.0", 8080)
+	err := server.Serve()
+	log.Println("terminated", os.Getpid(), err)
 }

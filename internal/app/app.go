@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/saromanov/diselfuel/internal/config"
+	"github.com/saromanov/diselfuel/internal/server"
 	"github.com/saromanov/diselfuel/internal/service"
 )
 
@@ -22,11 +23,12 @@ func New(c *config.Config) (*App, error) {
 	return &App{
 		conf: c,
 		serv: serv,
-	}
+	}, nil
 }
 
 // Start provides initialization of the app
 func (a *App) Start() error {
 	a.serv.Start()
+	server.New(a.conf)
 	return nil
 }
