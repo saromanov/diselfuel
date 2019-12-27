@@ -6,6 +6,7 @@ import (
 
 	consul "github.com/hashicorp/consul/api"
 	"github.com/saromanov/diselfuel/internal/config"
+	"github.com/sirupsen/logrus"
 )
 
 type Service struct {
@@ -15,7 +16,7 @@ type Service struct {
 }
 
 // New provides initialization of the service
-func New(servers *config.Config) (*Service, error) {
+func New(servers *config.Config, log *logrus.Logger) (*Service, error) {
 	c, err := consul.NewClient(consul.DefaultConfig())
 	if err != nil {
 		return nil, fmt.Errorf("unable to start consul client: %v", err)
@@ -28,6 +29,7 @@ func New(servers *config.Config) (*Service, error) {
 		Tags:    []string{"test"},
 	}
 
+	log.Info("Register of the service at Consul")
 	if err := c.Agent().ServiceRegister(serviceDef); err != nil {
 		return nil, fmt.Errorf("unable to register service: %v", err)
 	}
