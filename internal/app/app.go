@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// App provides definition of the app
 type App struct {
 	conf *config.Config
 	serv *service.Service

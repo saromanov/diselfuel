@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"time"
 
 	consul "github.com/hashicorp/consul/api"
@@ -13,10 +14,11 @@ type Service struct {
 	ConsulAgent *consul.Client
 }
 
+// New provides initialization of the service
 func New(servers *config.Config) (*Service, error) {
 	c, err := consul.NewClient(consul.DefaultConfig())
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unable to start consul client: %v", err)
 	}
 
 	serviceDef := &consul.AgentServiceRegistration{
@@ -27,7 +29,7 @@ func New(servers *config.Config) (*Service, error) {
 	}
 
 	if err := c.Agent().ServiceRegister(serviceDef); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unable to register service: %v", err)
 	}
 
 	return &Service{
