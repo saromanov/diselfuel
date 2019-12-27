@@ -2,7 +2,7 @@ package main
 
 import (
 	"os"
-
+	"github.com/sirupsen/logrus"
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/saromanov/diselfuel/internal/app"
 	"github.com/urfave/cli/v2"
@@ -11,16 +11,23 @@ import (
 func start(c *cli.Context) error {
 	conf, err := config.Load("config.yaml")
 	if err != nil {
-		panic(err)
+		logrus.WithError(err).Fatal("unable to load config")
 	}
-
-	a, err := app.New(conf)
+	
+	a, err := app.New(conf, logger())
 	if err != nil {
-		panic(err)
+		logrus.WithError(err).Fatal("unable to initialize app")
 	}
 
 	a.Start()
 	return nil
+}
+
+func logger()*logrus.Logger {
+	log := logrus.New()
+	log.SetFormatter(&logrus.JSONFormatter{})
+	log.SetOutput(os.Stdout)
+	return log
 }
 func main() {
 	app := &cli.App{

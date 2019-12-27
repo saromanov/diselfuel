@@ -6,6 +6,7 @@ import (
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/saromanov/diselfuel/internal/server"
 	"github.com/saromanov/diselfuel/internal/service"
+	"github.com/sirupsen/logrus"
 )
 
 type App struct {
@@ -14,7 +15,7 @@ type App struct {
 }
 
 // New provides initialization of the app
-func New(c *config.Config) (*App, error) {
+func New(c *config.Config, log *logrus.Logger) (*App, error) {
 	serv, err := service.New(c)
 	if err != nil {
 		return nil, fmt.Errorf("unable to initalize service")
