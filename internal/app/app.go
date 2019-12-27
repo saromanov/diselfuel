@@ -11,9 +11,10 @@ import (
 
 // App provides definition of the app
 type App struct {
-	conf   *config.Config
-	serv   *service.Service
-	logger *logrus.Logger
+	conf    *config.Config
+	serv    *service.Service
+	logger  *logrus.Logger
+	servers []config.Server
 }
 
 // New provides initialization of the app
@@ -34,5 +35,10 @@ func New(c *config.Config, log *logrus.Logger) (*App, error) {
 func (a *App) Start() error {
 	a.serv.Start()
 	server.New(a.conf, a.logger)
+	return nil
+}
+
+// Exec provides remote command execution
+func (a *App) Exec() error {
 	return nil
 }

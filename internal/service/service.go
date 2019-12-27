@@ -10,9 +10,9 @@ import (
 )
 
 type Service struct {
-	Name        string
-	TTL         time.Duration
-	ConsulAgent *consul.Client
+	Name         string
+	TTL          time.Duration
+	ConsulClient *consul.Client
 }
 
 // New provides initialization of the service
@@ -35,11 +35,24 @@ func New(servers *config.Config, log *logrus.Logger) (*Service, error) {
 	}
 
 	return &Service{
-		ConsulAgent: c,
+		ConsulClient: c,
 	}, nil
 
 }
 
+// ListNodes return list of nodes
+func (s *Service) ListNodes() ([]string, error) {
+	nodes, _, err := s.ConsulClient.Catalog().Nodes(&consul.QueryOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("unable to get list of nodes: %v", err)
+	}
+	nodesResp := make([]string, len(nodes))
+	for i, n := range nodes {
+		nodesResp[i] = n.Address
+	}
+
+	return nodesResp, nil
+}
 func (s *Service) Start() {
 
 }
