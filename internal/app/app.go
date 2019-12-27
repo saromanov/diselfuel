@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/saromanov/diselfuel/internal/config"
-	"github.com/saromanov/diselfuel/internal/server"
 	"github.com/saromanov/diselfuel/internal/service"
 	"github.com/sirupsen/logrus"
 )
@@ -34,7 +33,6 @@ func New(c *config.Config, log *logrus.Logger) (*App, error) {
 // Start provides initialization of the app
 func (a *App) Start() error {
 	a.serv.Start()
-	server.New(a.conf, a.logger)
 	return nil
 }
 
