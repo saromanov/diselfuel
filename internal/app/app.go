@@ -11,26 +11,28 @@ import (
 
 // App provides definition of the app
 type App struct {
-	conf *config.Config
-	serv *service.Service
+	conf   *config.Config
+	serv   *service.Service
+	logger *logrus.Logger
 }
 
 // New provides initialization of the app
 func New(c *config.Config, log *logrus.Logger) (*App, error) {
-	serv, err := service.New(c)
+	serv, err := service.New(c, log)
 	if err != nil {
 		return nil, fmt.Errorf("unable to initalize service")
 	}
 
 	return &App{
-		conf: c,
-		serv: serv,
+		conf:   c,
+		serv:   serv,
+		logger: log,
 	}, nil
 }
 
 // Start provides initialization of the app
 func (a *App) Start() error {
 	a.serv.Start()
-	server.New(a.conf)
+	server.New(a.conf, a.logger)
 	return nil
 }
