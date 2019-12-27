@@ -36,6 +36,11 @@ func (a *App) Start() error {
 	return nil
 }
 
+// GetService return service
+func (a *App) GetService() *service.Service {
+	return a.serv
+}
+
 // Exec provides remote command execution
 func (a *App) Exec() error {
 	return nil
