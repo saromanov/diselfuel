@@ -57,5 +57,11 @@ func (a *App) GetService() *service.Service {
 
 // Exec provides remote command execution
 func (a *App) Exec() error {
+	nodes, err := a.serv.ListNodes()
+	if err != nil {
+		return fmt.Errorf("unable to get list of nodes: %v", err)
+	}
+
+	fmt.Println("NOdes: ", nodes)
 	return nil
 }

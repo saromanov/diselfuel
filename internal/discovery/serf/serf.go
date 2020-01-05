@@ -1,4 +1,4 @@
-package service
+package serf
 
 import (
 	"fmt"
