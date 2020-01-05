@@ -16,16 +16,16 @@ type Service struct {
 }
 
 // New provides initialization of the service
-func New(servers *config.Config, log *logrus.Logger) (*Service, error) {
+func New(conf *config.Config, log *logrus.Logger) (*Service, error) {
 	c, err := consul.NewClient(consul.DefaultConfig())
 	if err != nil {
 		return nil, fmt.Errorf("unable to start consul client: %v", err)
 	}
 
 	serviceDef := &consul.AgentServiceRegistration{
-		Address: "http://127.0.0.1:8080",
-		ID:      "test",
-		Name:    "test",
+		Address: fmt.Sprintf("%s:%d", conf.Master.Address, conf.Master.Port),
+		ID:      conf.Master.Name,
+		Name:    conf.Master.Name,
 		Tags:    []string{"test"},
 	}
 
