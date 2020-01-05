@@ -11,14 +11,16 @@ import (
 type Config struct {
 	Master *Server  `yaml:"master"`
 	Slaves []Server `yaml:"slaves"`
+	Tags   []string `yaml:"tags"`
 }
 
 // Server provides definition of the server for configuration
 // It should contains Name and Addrss of the server
 type Server struct {
-	Name    string `yaml:"name"`
-	Address string `yaml:"address"`
-	Port    int    `yaml:"port"`
+	Name    string   `yaml:"name"`
+	Address string   `yaml:"address"`
+	Port    int      `yaml:"port"`
+	Tags    []string `yaml:"tags"`
 }
 
 // makeDefault filling default attributes at the config
