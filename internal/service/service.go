@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/apex/log"
 	consul "github.com/hashicorp/consul/api"
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/sirupsen/logrus"
@@ -34,10 +35,37 @@ func New(conf *config.Config, log *logrus.Logger) (*Service, error) {
 		return nil, fmt.Errorf("unable to register service: %v", err)
 	}
 
+	if err := join(c, conf); err != nil {
+		return nil, fmt.Errorf("unable to join nodes: %v", err)
+	}
+
 	return &Service{
 		ConsulClient: c,
 	}, nil
 
+}
+
+// join provides joining of children nodes to network
+func join(c *consul.Client, conf *config.Config) error {
+	if len(conf.Slaves) == 0 {
+		return nil
+	}
+
+	for _, s := range conf.Slaves {
+		serviceDef := &consul.AgentServiceRegistration{
+			Address: fmt.Sprintf("%s:%d", s.Address, s.Port),
+			ID:      s.Name,
+			Name:    s.Name,
+			Tags:    []string{"test"},
+		}
+
+		log.Infof("Joining of nodes to the network: %s", s.Name)
+		if err := c.Agent().ServiceRegister(serviceDef); err != nil {
+			return fmt.Errorf("unable to register service %s: %v", s.Name, err)
+		}
+	}
+
+	return nil
 }
 
 // ListNodes return list of nodes
