@@ -17,7 +17,7 @@ func start(c *cli.Context) error {
 	}
 
 	log := logger()
-	a, err := app.New(conf, log)
+	a, err := app.NewService(conf, log)
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to initialize app")
 	}
@@ -26,6 +26,20 @@ func start(c *cli.Context) error {
 	return nil
 }
 
+func exec(c *cli.Context) error {
+	conf, err := config.Load("config.yaml")
+	if err != nil {
+		logrus.WithError(err).Fatal("unable to load config")
+	}
+
+	log := logger()
+	a, err := app.New(conf, log)
+	if err != nil {
+		logrus.WithError(err).Fatal("unable to initialize app")
+	}
+	a.Exec()
+	return nil
+}
 func logger() *logrus.Logger {
 	log := logrus.New()
 	log.SetFormatter(&logrus.JSONFormatter{})
@@ -47,9 +61,7 @@ func main() {
 				Name:    "exec",
 				Aliases: []string{"e"},
 				Usage:   "Excecution of the command",
-				Action: func(c *cli.Context) error {
-					return nil
-				},
+				Action:  exec,
 			},
 		},
 	}
