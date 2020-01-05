@@ -24,7 +24,7 @@ func New(a *app.App, c *config.Config, log *logrus.Logger) {
 	r.Get("/v1/info", s.Info)
 	r.Get("/v1/nodes", s.List)
 
-	log.Info("starting of the server")
+	log.Infof("starting of the server at %s:%d", c.Master.Address, c.Master.Port)
 	server := lucio.NewServer(r, c.Master.Address, c.Master.Port)
 	err := server.Serve()
 	log.Println("terminated", os.Getpid(), err)
