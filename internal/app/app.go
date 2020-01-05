@@ -33,9 +33,14 @@ func NewService(c *config.Config, log *logrus.Logger) (*App, error) {
 
 // New provides initialization of instance
 func New(c *config.Config, log *logrus.Logger) (*App, error) {
+	serv, err := service.NewStrict(c, log)
+	if err != nil {
+		return nil, fmt.Errorf("unable to initalize service")
+	}
 	return &App{
 		conf:   c,
 		logger: log,
+		serv:   serv,
 	}, nil
 }
 

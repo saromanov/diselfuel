@@ -17,6 +17,7 @@ type Service struct {
 }
 
 // New provides initialization of the service
+// with registration of the new client
 func New(conf *config.Config, log *logrus.Logger) (*Service, error) {
 	c, err := consul.NewClient(consul.DefaultConfig())
 	if err != nil {
@@ -43,6 +44,17 @@ func New(conf *config.Config, log *logrus.Logger) (*Service, error) {
 		ConsulClient: c,
 	}, nil
 
+}
+
+// NewStrict provides initialization of the Consul client
+func NewStrict(conf *config.Config, log *logrus.Logger) (*Service, error) {
+	c, err := consul.NewClient(consul.DefaultConfig())
+	if err != nil {
+		return nil, fmt.Errorf("unable to start consul client: %v", err)
+	}
+	return &Service{
+		ConsulClient: c,
+	}, nil
 }
 
 // join provides joining of children nodes to network
