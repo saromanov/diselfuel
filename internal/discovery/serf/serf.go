@@ -24,6 +24,9 @@ func New(conf *config.Config, log *logrus.Logger) (*Service, error) {
 		return nil, fmt.Errorf("unable to start serf client: %v", err)
 	}
 
+	if err := join(c, conf); err != nil {
+		return nil, err
+	}
 	return &Service{
 		Client: c,
 	}, nil
