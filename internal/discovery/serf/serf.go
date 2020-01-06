@@ -20,7 +20,9 @@ type Service struct {
 // New provides initialization of the service
 // with registration of the new client
 func New(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
-	c, err := serf.Create(serf.DefaultConfig())
+	defConf := serf.DefaultConfig()
+	defConf.MemberlistConfig.BindPort = 7779
+	c, err := serf.Create(defConf)
 	if err != nil {
 		return nil, fmt.Errorf("unable to start serf client: %v", err)
 	}
@@ -36,10 +38,16 @@ func New(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
 
 // NewStrict provides initialization of the Consul client
 func NewStrict(conf *config.Config, log *logrus.Logger) (*Service, error) {
-	c, err := serf.Create(serf.DefaultConfig())
+	defConf := serf.DefaultConfig()
+	defConf.MemberlistConfig.AdvertiseAddr = "127.0.0.1"
+	defConf.MemberlistConfig.AdvertisePort = 7779
+	defConf.MemberlistConfig.BindAddr = "127.0.0.1"
+	defConf.MemberlistConfig.BindPort = 7781
+	c, err := serf.Create(defConf)
 	if err != nil {
 		return nil, fmt.Errorf("unable to start serf client: %v", err)
 	}
+
 	return &Service{
 		Client: c,
 	}, nil
@@ -54,7 +62,7 @@ func join(c *serf.Serf, conf *config.Config) error {
 	nodes := []string{}
 	for _, s := range conf.Slaves {
 		log.Infof("Joining of nodes to the network: %s", s.Name)
-		nodes = append(nodes, fmt.Sprintf("%s:%d", s.Address, s.Port))
+		nodes = append(nodes, fmt.Sprintf("%s:%d", "172.17.0.3", 7946))
 	}
 
 	if _, err := c.Join(nodes, true); err != nil {
