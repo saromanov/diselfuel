@@ -11,9 +11,9 @@ import (
 )
 
 type Service struct {
-	Name         string
-	TTL          time.Duration
-	Client *serf.Client
+	Name   string
+	TTL    time.Duration
+	Client *serf.Serf
 }
 
 // New provides initialization of the service
@@ -42,39 +42,32 @@ func NewStrict(conf *config.Config, log *logrus.Logger) (*Service, error) {
 }
 
 // join provides joining of children nodes to network
-func join(c *consul.Client, conf *config.Config) error {
+func join(c *serf.Serf, conf *config.Config) error {
 	if len(conf.Slaves) == 0 {
 		return nil
 	}
 
+	nodes := []string{}
 	for _, s := range conf.Slaves {
-		serviceDef := &consul.AgentServiceRegistration{
-			Address: fmt.Sprintf("%s:%d", s.Address, s.Port),
-			ID:      s.Name,
-			Name:    s.Name,
-			Tags:    []string{"test"},
-		}
-
 		log.Infof("Joining of nodes to the network: %s", s.Name)
-		if err := c.Agent().ServiceRegister(serviceDef); err != nil {
-			return fmt.Errorf("unable to register service %s: %v", s.Name, err)
-		}
+		nodes = append(nodes, fmt.Sprintf("%s:%d", s.Address, s.Port))
 	}
 
+	if _, err := c.Join(nodes, true); err != nil {
+		return fmt.Errorf("unable to join nodes: %v", err)
+	}
 	return nil
 }
 
 // ListNodes return list of nodes
 func (s *Service) ListNodes() ([]string, error) {
-	nodes, _, err := s.Client.Members()
-	if err != nil {
-		return nil, fmt.Errorf("unable to get list of nodes: %v", err)
-	}
-	nodesResp := make([]string, len(nodes))
-	for i, n := range nodes {
+	members := s.Client.Members()
+	nodesResp := make([]string, len(members))
+	for i, n := range members {
 		nodesResp[i] = n.Addr.String()
 	}
 
+	fmt.Println("MEMBERS: ", members)
 	return nodesResp, nil
 }
 func (s *Service) Start() {
