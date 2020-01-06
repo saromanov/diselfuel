@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/saromanov/diselfuel/internal/config"
-	"github.com/saromanov/diselfuel/internal/discovery/discovery"
-	"github.com/saromanov/diselfuel/internal/discovery/discovery/serf"
+	"github.com/saromanov/diselfuel/internal/discovery"
+	"github.com/saromanov/diselfuel/internal/discovery/serf"
 	"github.com/sirupsen/logrus"
 )
 
@@ -34,7 +34,7 @@ func NewService(c *config.Config, log *logrus.Logger) (*App, error) {
 
 // New provides initialization of instance
 func New(c *config.Config, log *logrus.Logger) (*App, error) {
-	serv, err := service.NewStrict(c, log)
+	serv, err := serf.NewStrict(c, log)
 	if err != nil {
 		return nil, fmt.Errorf("unable to initalize service")
 	}
@@ -47,12 +47,12 @@ func New(c *config.Config, log *logrus.Logger) (*App, error) {
 
 // Start provides initialization of the app
 func (a *App) Start() error {
-	a.serv.Start()
+	//a.serv.Start()
 	return nil
 }
 
 // GetService return service
-func (a *App) GetService() *service.Service {
+func (a *App) GetService() discovery.Discovery {
 	return a.serv
 }
 
