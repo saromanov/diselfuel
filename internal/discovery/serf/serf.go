@@ -21,39 +21,23 @@ type Service struct {
 func New(conf *config.Config, log *logrus.Logger) (*Service, error) {
 	c, err := serf.Create(serf.DefaultConfig())
 	if err != nil {
-		return nil, fmt.Errorf("unable to start consul client: %v", err)
-	}
-
-	serviceDef := &consul.AgentServiceRegistration{
-		Address: fmt.Sprintf("%s:%d", conf.Master.Address, conf.Master.Port),
-		ID:      conf.Master.Name,
-		Name:    conf.Master.Name,
-		Tags:    []string{"test"},
-	}
-
-	log.Info("Register of the service at Consul")
-	if err := c.Agent().ServiceRegister(serviceDef); err != nil {
-		return nil, fmt.Errorf("unable to register service: %v", err)
-	}
-
-	if err := join(c, conf); err != nil {
-		return nil, fmt.Errorf("unable to join nodes: %v", err)
+		return nil, fmt.Errorf("unable to start serf client: %v", err)
 	}
 
 	return &Service{
-		ConsulClient: c,
+		Client: c,
 	}, nil
 
 }
 
 // NewStrict provides initialization of the Consul client
 func NewStrict(conf *config.Config, log *logrus.Logger) (*Service, error) {
-	c, err := consul.NewClient(consul.DefaultConfig())
+	c, err := serf.Create(serf.DefaultConfig())
 	if err != nil {
-		return nil, fmt.Errorf("unable to start consul client: %v", err)
+		return nil, fmt.Errorf("unable to start serf client: %v", err)
 	}
 	return &Service{
-		ConsulClient: c,
+		Client: c,
 	}, nil
 }
 
@@ -82,13 +66,13 @@ func join(c *consul.Client, conf *config.Config) error {
 
 // ListNodes return list of nodes
 func (s *Service) ListNodes() ([]string, error) {
-	nodes, _, err := s.ConsulClient.Catalog().Nodes(&consul.QueryOptions{})
+	nodes, _, err := s.Client.Members()
 	if err != nil {
 		return nil, fmt.Errorf("unable to get list of nodes: %v", err)
 	}
 	nodesResp := make([]string, len(nodes))
 	for i, n := range nodes {
-		nodesResp[i] = n.Address
+		nodesResp[i] = n.Addr.String()
 	}
 
 	return nodesResp, nil
