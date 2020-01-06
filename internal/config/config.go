@@ -17,10 +17,12 @@ type Config struct {
 // Server provides definition of the server for configuration
 // It should contains Name and Addrss of the server
 type Server struct {
-	Name    string   `yaml:"name"`
-	Address string   `yaml:"address"`
-	Port    int      `yaml:"port"`
-	Tags    []string `yaml:"tags"`
+	Name             string   `yaml:"name"`
+	Address          string   `yaml:"address"`
+	Port             int      `yaml:"port"`
+	DiscoveryAddress string   `yaml:"discovery_address"`
+	DiscoveryPort    int      `yaml:"discovery_port"`
+	Tags             []string `yaml:"tags"`
 }
 
 // makeDefault filling default attributes at the config
