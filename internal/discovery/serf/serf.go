@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/apex/log"
-	consul "github.com/hashicorp/consul/api"
+	"github.com/hashicorp/serf/serf"
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/sirupsen/logrus"
 )
@@ -13,13 +13,13 @@ import (
 type Service struct {
 	Name         string
 	TTL          time.Duration
-	ConsulClient *consul.Client
+	Client *serf.Client
 }
 
 // New provides initialization of the service
 // with registration of the new client
 func New(conf *config.Config, log *logrus.Logger) (*Service, error) {
-	c, err := consul.NewClient(consul.DefaultConfig())
+	c, err := serf.Create(serf.DefaultConfig())
 	if err != nil {
 		return nil, fmt.Errorf("unable to start consul client: %v", err)
 	}
