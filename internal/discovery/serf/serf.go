@@ -7,6 +7,7 @@ import (
 	"github.com/apex/log"
 	"github.com/hashicorp/serf/serf"
 	"github.com/saromanov/diselfuel/internal/config"
+	"github.com/saromanov/diselfuel/internal/discovery"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,7 +19,7 @@ type Service struct {
 
 // New provides initialization of the service
 // with registration of the new client
-func New(conf *config.Config, log *logrus.Logger) (*Service, error) {
+func New(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
 	c, err := serf.Create(serf.DefaultConfig())
 	if err != nil {
 		return nil, fmt.Errorf("unable to start serf client: %v", err)

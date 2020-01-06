@@ -4,14 +4,15 @@ import (
 	"fmt"
 
 	"github.com/saromanov/diselfuel/internal/config"
-	"github.com/saromanov/diselfuel/internal/service"
+	"github.com/saromanov/diselfuel/internal/discovery/discovery"
+	"github.com/saromanov/diselfuel/internal/discovery/discovery/serf"
 	"github.com/sirupsen/logrus"
 )
 
 // App provides definition of the app
 type App struct {
 	conf    *config.Config
-	serv    *service.Service
+	serv    discovery.Discovery
 	logger  *logrus.Logger
 	servers []config.Server
 }
@@ -19,7 +20,7 @@ type App struct {
 // NewService provides initialization of the app
 // with initialization of service
 func NewService(c *config.Config, log *logrus.Logger) (*App, error) {
-	serv, err := service.New(c, log)
+	serv, err := serf.New(c, log)
 	if err != nil {
 		return nil, fmt.Errorf("unable to initalize service")
 	}
