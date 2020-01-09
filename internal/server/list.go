@@ -11,5 +11,12 @@ func (s *Server) List(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	json.Marshal(nodes)
+	js, err := json.Marshal(nodes)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }

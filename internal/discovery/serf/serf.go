@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/serf/serf"
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/saromanov/diselfuel/internal/discovery"
+	"github.com/saromanov/diselfuel/internal/models"
 	"github.com/sirupsen/logrus"
 )
 
@@ -63,7 +64,7 @@ func join(c *serf.Serf, conf *config.Config) error {
 	nodes := []string{}
 	for _, s := range conf.Slaves {
 		log.Infof("Joining of nodes to the network: %s", s.Name)
-		nodes = append(nodes, fmt.Sprintf("%s:%d", "172.17.0.3", 7946))
+		nodes = append(nodes, fmt.Sprintf("%s:%d", s.Address, s.Port))
 	}
 
 	if _, err := c.Join(nodes, true); err != nil {
@@ -73,14 +74,18 @@ func join(c *serf.Serf, conf *config.Config) error {
 }
 
 // ListNodes return list of nodes
-func (s *Service) ListNodes() ([]string, error) {
+func (s *Service) ListNodes() ([]*models.Host, error) {
+
 	members := s.Client.Members()
-	nodesResp := make([]string, len(members))
+	nodesResp := make([]*models.Host, len(members))
 	for i, n := range members {
-		nodesResp[i] = n.Addr.String()
+		nodesResp[i] = &models.Host{
+			Address: n.Addr.String(),
+			Name:    n.Name,
+			Status:  n.Status.String(),
+		}
 	}
 
-	fmt.Println("MEMBERS: ", members)
 	return nodesResp, nil
 }
 func (s *Service) Start() {

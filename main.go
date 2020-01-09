@@ -48,12 +48,14 @@ func list(c *cli.Context) error {
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to load config")
 	}
-	item := client.New(conf, "localhost")
+	item := client.New(conf, "http://127.0.0.1:8081")
 	resp, err := item.GetList()
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to get list")
 	}
-	fmt.Println(resp)
+	for _, n := range resp {
+		fmt.Printf("%s %s %s\n", n.Address, n.Name, n.Status)
+	}
 	return nil
 }
 func logger() *logrus.Logger {
@@ -83,7 +85,7 @@ func main() {
 				Name:    "list",
 				Aliases: []string{"l"},
 				Usage:   "Return list of hosts",
-				Action:  exec,
+				Action:  list,
 			},
 		},
 	}
