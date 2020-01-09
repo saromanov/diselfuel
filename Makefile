@@ -1,6 +1,5 @@
 -include .env
 
-VERSION := $(shell git describe --tags)
 BUILD := $(shell git rev-parse --short HEAD)
 PROJECTNAME := $(shell basename "$(PWD)")
 
@@ -10,16 +9,18 @@ GOPATH := $(GOBASE)/vendor:$(GOBASE)
 GOBIN := $(GOBASE)/bin
 GOFILES := $(wildcard *.go)
 
-# Use linker flags to provide version/build settings
-LDFLAGS=-ldflags "-X=main.Version=$(VERSION) -X=main.Build=$(BUILD)"
+build: 
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go build -o $(PROJECTNAME) main.go
 
-# Redirect error output to a file, so we can show it in development mode.
-STDERR := /tmp/.$(PROJECTNAME)-stderr.txt
+run: 
+	./diselfuel
 
-# PID file will keep the process id of the server
-PID := /tmp/.$(PROJECTNAME).pid
+start: build run
 
-# Make is verbose in Linux. Make it silent.
-MAKEFLAGS += --silent
-
-build: @GOPATH=$(GOPATH) GOBIN=$(GOBIN) go build main.go -o $(PROJECTNAME)
+all: help
+help: Makefile
+	@echo
+	@echo " Choose a command run in "$(PROJECTNAME)":"
+	@echo
+	@sed -n 's/^##//p' $< | column -t -s ':' |  sed -e 's/^/ /'
+	@echo
