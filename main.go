@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/saromanov/diselfuel/internal/app"
+	"github.com/saromanov/diselfuel/internal/client"
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/saromanov/diselfuel/internal/server"
 	"github.com/sirupsen/logrus"
@@ -40,6 +42,20 @@ func exec(c *cli.Context) error {
 	a.Exec()
 	return nil
 }
+
+func list(c *cli.Context) error {
+	conf, err := config.Load("config.yaml")
+	if err != nil {
+		logrus.WithError(err).Fatal("unable to load config")
+	}
+	item := client.New(conf, "localhost")
+	resp, err := item.GetList()
+	if err != nil {
+		logrus.WithError(err).Fatal("unable to get list")
+	}
+	fmt.Println(resp)
+	return nil
+}
 func logger() *logrus.Logger {
 	log := logrus.New()
 	log.SetFormatter(&logrus.JSONFormatter{})
@@ -61,6 +77,12 @@ func main() {
 				Name:    "exec",
 				Aliases: []string{"e"},
 				Usage:   "Excecution of the command",
+				Action:  exec,
+			},
+			{
+				Name:    "list",
+				Aliases: []string{"l"},
+				Usage:   "Return list of hosts",
 				Action:  exec,
 			},
 		},

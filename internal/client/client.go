@@ -37,8 +37,8 @@ func (c *Client) GetList() (*models.Host, error) {
 	defer resp.Body.Close()
 
 	data := &models.Host{}
-    if err := json.NewDecoder(r.Body).Decode(data); err != nil {
-		return nil, fmt.Errorf(decodeErrTmpl, "GetList". err)
+    if err := json.NewDecoder(resp.Body).Decode(data); err != nil {
+		return nil, fmt.Errorf(decodeErrTmpl, "GetList", err)
 	}
 
 	return data, nil
