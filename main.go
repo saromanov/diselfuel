@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/saromanov/diselfuel/internal/app"
 	"github.com/saromanov/diselfuel/internal/client"
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/saromanov/diselfuel/internal/server"
+	"github.com/saromanov/tables"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
@@ -53,9 +53,13 @@ func list(c *cli.Context) error {
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to get list")
 	}
+
+	tab := tables.New()
+	tab.AddHeader("address", "name", "status")
 	for _, n := range resp {
-		fmt.Printf("%s %s %s\n", n.Address, n.Name, n.Status)
+		tab.AddLine(n.Address, n.Name, n.Status)
 	}
+	tab.Build()
 	return nil
 }
 func logger() *logrus.Logger {
