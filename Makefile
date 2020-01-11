@@ -10,7 +10,7 @@ GOBIN := $(GOBASE)/bin
 GOFILES := $(wildcard *.go)
 
 build: 
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go build -o $(PROJECTNAME) main.go
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go build -o $(PROJECTNAME) ./cmd/main.go
 
 run: 
 	./diselfuel
