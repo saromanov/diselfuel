@@ -11,6 +11,6 @@ require (
 	github.com/saromanov/tables v0.0.0-20191205142233-b2f2120d80ac
 	github.com/sirupsen/logrus v1.4.2
 	github.com/urfave/cli/v2 v2.1.1
-	golang.org/x/crypto v0.0.0-20200109152110-61a87790db17 // indirect
+	golang.org/x/crypto v0.0.0-20200109152110-61a87790db17
 	gopkg.in/yaml.v2 v2.2.7
 )
