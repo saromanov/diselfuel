@@ -45,11 +45,16 @@ func exec(c *cli.Context) error {
 
 // list returns list of nodes
 func list(c *cli.Context) error {
+	addressFlag := c.String("address")
 	conf, err := config.Load("config.yaml")
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to load config")
 	}
-	item := client.New(conf, "http://127.0.0.1:8081")
+	address := "http://127.0.0.1:8081"
+	if addressFlag != "" {
+		address = addressFlag
+	}
+	item := client.New(conf, address)
 	resp, err := item.GetList()
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to get list")
@@ -73,6 +78,13 @@ func main() {
 	app := &cli.App{
 		Name:  "diselfuel",
 		Usage: "Starting of the app",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "address",
+				Value: "",
+				Usage: "address of the server for execution",
+			},
+		},
 		Commands: []*cli.Command{
 			{
 				Name:    "start",
