@@ -9,18 +9,18 @@ import (
 )
 
 // Run provides execution of command
-func Run(address, user, path string) error {
+func Run(command, address, user, path string) error {
 	client, err := simplessh.ConnectWithKeyFile(address, user, path)
 	if err != nil {
 		return err
 	}
 	defer client.Close()
 
-	output, err := client.Exec("uptime")
+	output, err := client.Exec(command)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("Uptime: %s\n", output)
+	fmt.Printf("Result: %s\n", output)
 	return nil
 }
