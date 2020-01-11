@@ -28,6 +28,7 @@ func start(c *cli.Context) error {
 	return nil
 }
 
+// exec provides execution of commands
 func exec(c *cli.Context) error {
 	conf, err := config.Load("config.yaml")
 	if err != nil {
@@ -43,6 +44,7 @@ func exec(c *cli.Context) error {
 	return nil
 }
 
+// list returns list of nodes
 func list(c *cli.Context) error {
 	conf, err := config.Load("config.yaml")
 	if err != nil {
