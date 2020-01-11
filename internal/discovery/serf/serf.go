@@ -22,6 +22,7 @@ type Service struct {
 // with registration of the new client
 func New(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
 	defConf := serf.DefaultConfig()
+	defConf.Tags = addTags(conf.Tags)
 	defConf.MemberlistConfig.BindAddr = conf.Master.DiscoveryAddress
 	defConf.MemberlistConfig.BindPort = conf.Master.DiscoveryPort
 	c, err := serf.Create(defConf)
@@ -53,6 +54,15 @@ func NewStrict(conf *config.Config, log *logrus.Logger) (*Service, error) {
 	return &Service{
 		Client: c,
 	}, nil
+}
+
+func addTags(t []string) map[string]string {
+	tags := make(map[string]string)
+	for i, n := range t {
+		tags[fmt.Sprintf("tag_%d", i)] = n
+	}
+
+	return tags
 }
 
 // join provides joining of children nodes to network
