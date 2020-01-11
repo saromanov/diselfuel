@@ -84,6 +84,11 @@ func main() {
 				Value: "",
 				Usage: "address of the server for execution",
 			},
+			&cli.StringFlag{
+				Name:  "config",
+				Value: "config.yaml",
+				Usage: "path to config",
+			},
 		},
 		Commands: []*cli.Command{
 			{
