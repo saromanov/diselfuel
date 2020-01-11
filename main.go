@@ -23,7 +23,6 @@ func start(c *cli.Context) error {
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to initialize app")
 	}
-	a.Start()
 	server.New(a, conf, log)
 	return nil
 }

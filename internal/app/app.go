@@ -45,12 +45,6 @@ func New(c *config.Config, log *logrus.Logger) (*App, error) {
 	}, nil
 }
 
-// Start provides initialization of the app
-func (a *App) Start() error {
-	//a.serv.Start()
-	return nil
-}
-
 // GetService return service
 func (a *App) GetService() discovery.Discovery {
 	return a.serv
