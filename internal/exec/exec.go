@@ -3,35 +3,24 @@
 package exec
 
 import (
-	"bytes"
 	"fmt"
 
-	"golang.org/x/crypto/ssh"
+	"github.com/sfreiberg/simplessh"
 )
 
-type Execute struct {
-}
-
-func (e *Execute) Do() error {
-	_, err := executeCommand()
-	return err
-}
-func executeCommand(command, hostname string, port string, config *ssh.ClientConfig) (string, error) {
-	conn, err := ssh.Dial("tcp", fmt.Sprintf("%s:%s", hostname, port), config)
+// Run provides execution of command
+func Run(address, user, path string) error {
+	client, err := simplessh.ConnectWithKeyFile(address, user, path)
 	if err != nil {
-		return "", fmt.Errorf("unable to connect: %v", err)
+		return err
 	}
-	session, err := conn.NewSession()
+	defer client.Close()
+
+	output, err := client.Exec("uptime")
 	if err != nil {
-		return "", fmt.Errorf("unable to make session: %v", err)
-	}
-	defer session.Close()
-
-	var stdoutBuf bytes.Buffer
-	session.Stdout = &stdoutBuf
-	if err := session.Run(command); err != nil {
-		return "", fmt.Errorf("unable to run command: %v", err)
+		return err
 	}
 
-	return fmt.Sprintf("%s -> %s", hostname, stdoutBuf.String()), nil
+	fmt.Printf("Uptime: %s\n", output)
+	return nil
 }
