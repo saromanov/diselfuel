@@ -29,17 +29,21 @@ func start(c *cli.Context) error {
 
 // exec provides execution of commands
 func exec(c *cli.Context) error {
+	addressFlag := c.String("address")
 	conf, err := config.Load("config.yaml")
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to load config")
 	}
 
-	log := logger()
-	a, err := app.New(conf, log)
-	if err != nil {
-		logrus.WithError(err).Fatal("unable to initialize app")
+	address := "http://127.0.0.1:8081"
+	if addressFlag != "" {
+		address = addressFlag
 	}
-	a.Exec()
+	item := client.New(conf, address)
+	err = item.Exec()
+	if err != nil {
+		logrus.WithError(err).Fatal("unable to execute command")
+	}
 	return nil
 }
 

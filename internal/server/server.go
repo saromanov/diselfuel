@@ -23,6 +23,7 @@ func New(a *app.App, c *config.Config, log *logrus.Logger) {
 	}
 	r.Get("/v1/info", s.Info)
 	r.Get("/v1/nodes", s.List)
+	r.Get("/v1/exec", s.Exec)
 
 	log.Infof("starting of the server at %s:%d", c.Master.Address, c.Master.Port)
 	server := lucio.NewServer(r, c.Master.Address, c.Master.Port)
