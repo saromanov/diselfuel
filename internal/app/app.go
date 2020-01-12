@@ -51,7 +51,7 @@ func (a *App) GetService() discovery.Discovery {
 }
 
 // Exec provides remote command execution
-func (a *App) Exec(query string) error {
+func (a *App) Exec(query, command string) error {
 	nodes, err := a.serv.ListNodes()
 	if err != nil {
 		return fmt.Errorf("unable to get list of nodes: %v", err)
