@@ -2,6 +2,8 @@ package app
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/saromanov/diselfuel/internal/discovery"
@@ -58,11 +60,11 @@ func (a *App) Exec(query, command string) error {
 		return fmt.Errorf("unable to get list of nodes: %v", err)
 	}
 
-	if query == "*" {
-
+	filteredNodes, err := filterNodes(query, nodes)
+	if err != nil {
+		return fmt.Errorf("unable to filter nodes: %v", err)
 	}
-
-	addresses := getNodeAddresess(nodes)
+	addresses := getNodeAddresess(filteredNodes)
 	fmt.Println("NOdes: ", addresses)
 	return nil
 }
@@ -73,4 +75,28 @@ func getNodeAddresess(hosts []*models.Host) []string {
 		response[i] = h.Address
 	}
 	return response
+}
+
+// filterNodes provides filtering of nodes by the query
+// for example:
+// node=test1
+// node=test*
+func filterNodes(query string, hosts []*models.Host) ([]*models.Host, error) {
+	if strings.HasPrefix(query, "node") {
+		rawResult := strings.Split(query, "=")
+		if len(rawResult) < 2 {
+			return nil, fmt.Errorf("invalid expression")
+		}
+		result := []*models.Host{}
+		re := regexp.MustCompile(rawResult[1])
+		for _, h := range hosts {
+			if s := re.FindString(h.Name); s != "" {
+				result = append(result, h)
+			}
+		}
+
+		return result, nil
+	}
+
+	return nil, nil
 }
