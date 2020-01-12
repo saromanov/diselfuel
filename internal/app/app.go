@@ -6,6 +6,7 @@ import (
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/saromanov/diselfuel/internal/discovery"
 	"github.com/saromanov/diselfuel/internal/discovery/serf"
+	"github.com/saromanov/diselfuel/internal/models"
 	"github.com/sirupsen/logrus"
 )
 
@@ -57,6 +58,19 @@ func (a *App) Exec(query, command string) error {
 		return fmt.Errorf("unable to get list of nodes: %v", err)
 	}
 
-	fmt.Println("NOdes: ", nodes)
+	if query == "*" {
+
+	}
+
+	addresses := getNodeAddresess(nodes)
+	fmt.Println("NOdes: ", addresses)
 	return nil
+}
+
+func getNodeAddresess(hosts []*models.Host) []string {
+	response := make([]string, len(hosts))
+	for i, h := range hosts {
+		response[i] = h.Address
+	}
+	return response
 }
