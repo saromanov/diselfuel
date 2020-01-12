@@ -40,7 +40,7 @@ func exec(c *cli.Context) error {
 		address = addressFlag
 	}
 	item := client.New(conf, address)
-	err = item.Exec()
+	err = item.Exec("*", "ls -la")
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to execute command")
 	}

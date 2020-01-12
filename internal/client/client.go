@@ -1,12 +1,9 @@
 package client
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/saromanov/diselfuel/internal/config"
-	"github.com/saromanov/diselfuel/internal/models"
 )
 
 // Client provides implementation of client
@@ -26,27 +23,8 @@ func New(cfg *config.Config, address string) *Client {
 	}
 }
 
-// GetList returns list of hosts
-func (c *Client) GetList() ([]*models.Host, error) {
-	address := c.getAddress()
-	resp, err := c.client.Get(fmt.Sprintf("%s/v1/nodes", address))
-	if err != nil {
-		return nil, fmt.Errorf("unable to get list of hosts: %v", err)
-	}
-
-	defer resp.Body.Close()
-
-	data := []*models.Host{}
-	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
-		return nil, fmt.Errorf(decodeErrTmpl, "GetList", err)
-	}
-
-	return data, nil
-}
-
 func (c *Client) getAddress() string {
 	address := c.address
-	fmt.Println("ADD: ", address)
 	if address != "" {
 		return address
 	}
