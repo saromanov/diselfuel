@@ -3,6 +3,7 @@ package client
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/saromanov/diselfuel/internal/models"
 )
@@ -10,11 +11,21 @@ import (
 // Exec returns list of hosts
 func (c *Client) Exec(query, command string) error {
 	address := c.getAddress()
-	resp, err := c.client.Get(fmt.Sprintf("%s/v1/exec", address))
+	path := fmt.Sprintf("%s/v1/exec", address)
+	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
-		return fmt.Errorf("unable to get list of hosts: %v", err)
+		return fmt.Errorf("unable to create request: %v", err)
 	}
 
+	q := req.URL.Query()
+	q.Add("query", query)
+	q.Add("command", command)
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return fmt.Errorf("unable to send request to %s %v", path, err)
+	}
 	defer resp.Body.Close()
 
 	data := []*models.Exec{}
