@@ -69,6 +69,7 @@ func (a *App) Exec(query, command string) (*models.Exec, error) {
 	fmt.Println("NOdes: ", addresses)
 	for _, ad := range addresses {
 		if err := exec.Run(command, ad, query, query); err != nil {
+			fmt.Println("ERR: ", err)
 			return &models.Exec{Status: "fail"}, err
 		}
 	}
