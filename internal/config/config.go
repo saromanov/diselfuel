@@ -33,7 +33,7 @@ func (c *Config) makeDefault() {
 	if c.Master == nil {
 		c.Master = &Server{
 			Name:    "default",
-			Address: "localhost",
+			Address: "127.0.0.1",
 			Port:    8080,
 		}
 	}
