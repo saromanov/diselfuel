@@ -65,23 +65,13 @@ func (a *App) Exec(query, command string) (*models.Exec, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to filter nodes: %v", err)
 	}
-	addresses := getNodeAddresess(filteredNodes)
-	fmt.Println("NOdes: ", addresses)
-	for _, ad := range addresses {
-		if err := exec.Run(command, ad, query, query); err != nil {
+	for _, ad := range filteredNodes {
+		if err := exec.Run(command, ad.Address, ad.User, query); err != nil {
 			fmt.Println("ERR: ", err)
 			return &models.Exec{Status: "fail"}, err
 		}
 	}
 	return &models.Exec{Status: "ok"}, nil
-}
-
-func getNodeAddresess(hosts []*models.Host) []string {
-	response := make([]string, len(hosts))
-	for i, h := range hosts {
-		response[i] = h.Address
-	}
-	return response
 }
 
 // filterNodes provides filtering of nodes by the query

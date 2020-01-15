@@ -23,6 +23,7 @@ type Server struct {
 	DiscoveryAddress string   `yaml:"discovery_address"`
 	DiscoveryPort    int      `yaml:"discovery_port"`
 	Tags             []string `yaml:"tags"`
+	User             string   `yaml:"user"`
 }
 
 // makeDefault filling default attributes at the config

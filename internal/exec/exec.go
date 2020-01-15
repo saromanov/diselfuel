@@ -30,7 +30,7 @@ func Run(command, address, user, path string) error {
 	if path == "" {
 		return errNoPath
 	}
-	client, err := simplessh.ConnectWithKeyFile(address, user, path)
+	client, err := simplessh.ConnectWithKeyFile(address, user, fmt.Sprintf("/home/%s/.ssh/id_rsa", "default"))
 	if err != nil {
 		return err
 	}
