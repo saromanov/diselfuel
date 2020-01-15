@@ -97,6 +97,18 @@ func filterNodes(query string, hosts []*models.Host) ([]*models.Host, error) {
 
 		return result, nil
 	}
-
+	if strings.HasPrefix(query, "address") {
+		rawResult := strings.Split(query, "=")
+		if len(rawResult) < 2 {
+			return nil, fmt.Errorf("invalid expression")
+		}
+		result := []*models.Host{}
+		re := regexp.MustCompile(rawResult[1])
+		for _, h := range hosts {
+			if s := re.FindString(h.Address); s != "" {
+				result = append(result, h)
+			}
+		}
+	}
 	return nil, nil
 }
