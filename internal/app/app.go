@@ -8,6 +8,7 @@ import (
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/saromanov/diselfuel/internal/discovery"
 	"github.com/saromanov/diselfuel/internal/discovery/serf"
+	"github.com/saromanov/diselfuel/internal/exec"
 	"github.com/saromanov/diselfuel/internal/models"
 	"github.com/sirupsen/logrus"
 )
@@ -66,6 +67,11 @@ func (a *App) Exec(query, command string) (*models.Exec, error) {
 	}
 	addresses := getNodeAddresess(filteredNodes)
 	fmt.Println("NOdes: ", addresses)
+	for _, ad := range addresses {
+		if err := exec.Run(command, ad, query, query); err != nil {
+			return &models.Exec{Status: "fail"}, err
+		}
+	}
 	return &models.Exec{Status: "ok"}, nil
 }
 
