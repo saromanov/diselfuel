@@ -82,6 +82,9 @@ func getNodeAddresess(hosts []*models.Host) []string {
 // node=test1
 // node=test*
 func filterNodes(query string, hosts []*models.Host) ([]*models.Host, error) {
+	if query == "*" {
+		return hosts, nil
+	}
 	if strings.HasPrefix(query, "node") {
 		rawResult := strings.Split(query, "=")
 		if len(rawResult) < 2 {

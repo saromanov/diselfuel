@@ -28,7 +28,7 @@ func (c *Client) Exec(query, command string) error {
 	}
 	defer resp.Body.Close()
 
-	data := []*models.Exec{}
+	data := &models.Exec{}
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
 		return fmt.Errorf(decodeErrTmpl, "GetList", err)
 	}
