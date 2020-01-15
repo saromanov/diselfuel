@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"net/http"
 )
 
@@ -16,10 +17,19 @@ func (s *Server) Exec(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "command attribute is missed", http.StatusBadRequest)
 		return
 	}
-	if err := s.a.Exec(query[0], command[0]); err != nil {
+	response, err := s.a.Exec(query[0], command[0])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(response)
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
