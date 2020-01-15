@@ -32,9 +32,10 @@ func (c *Config) makeDefault() {
 	}
 	if c.Master == nil {
 		c.Master = &Server{
-			Name:    "default",
-			Address: "127.0.0.1",
-			Port:    8080,
+			Name:             "default",
+			Address:          "127.0.0.1",
+			Port:             8080,
+			DiscoveryAddress: "127.0.0.1",
 		}
 	}
 }
