@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/saromanov/diselfuel/internal/discovery"
@@ -55,7 +56,7 @@ func (a *App) GetService() discovery.Discovery {
 }
 
 // Exec provides remote command execution
-func (a *App) Exec(query, command string) (*models.Exec, error) {
+func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 	nodes, err := a.serv.ListNodes()
 	if err != nil {
 		return nil, fmt.Errorf("unable to get list of nodes: %v", err)
@@ -65,13 +66,23 @@ func (a *App) Exec(query, command string) (*models.Exec, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to filter nodes: %v", err)
 	}
+	response := []*models.Exec{}
+	var wg sync.WaitGroup
+	wg.Add(len(filteredNodes))
 	for _, ad := range filteredNodes {
-		if err := exec.Run(command, ad.Address, ad.User, query); err != nil {
-			fmt.Println("ERR: ", err)
-			return &models.Exec{Status: "fail"}, err
-		}
+		go func(host *models.Host) {
+			defer wg.Done()
+			result, err := exec.Run(command, host.Address, host.User, query)
+			if err != nil {
+				fmt.Println("ERR: ", err)
+				response = append(response, &models.Exec{Status: "fail"})
+			}
+			response = append(response, &models.Exec{Status: "ok", Output: result})
+
+		}(ad)
 	}
-	return &models.Exec{Status: "ok"}, nil
+	wg.Wait()
+	return response, nil
 }
 
 // filterNodes provides filtering of nodes by the query
