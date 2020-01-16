@@ -29,6 +29,10 @@ func start(c *cli.Context) error {
 
 // exec provides execution of commands
 func exec(c *cli.Context) error {
+	args := c.Args()
+	if args.Len() < 2 {
+		logrus.Fatal("not enough arguments")
+	}
 	addressFlag := c.String("address")
 	conf, err := config.Load("config.yaml")
 	if err != nil {
@@ -40,7 +44,7 @@ func exec(c *cli.Context) error {
 		address = addressFlag
 	}
 	item := client.New(conf, address)
-	err = item.Exec("node=.", "ls -la")
+	err = item.Exec(args.Get(0), args.Get(1))
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to execute command")
 	}
