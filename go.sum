@@ -103,6 +103,8 @@ github.com/rogpeppe/fastuuid v1.1.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6L
 github.com/russross/blackfriday/v2 v2.0.1 h1:lPqVAte+HuHNfhJ/0LC98ESWRz8afy9tM/0RK8m9o+Q=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/ryanuber/columnize v0.0.0-20160712163229-9b3edd62028f/go.mod h1:sm1tb6uqfes/u+d4ooFouqFdy9/2g9QGwK3SQygK0Ts=
+github.com/saromanov/cowrow v0.0.0-20200116175014-5f6777ce2da7 h1:XwlCoY9ILFGnFL5/ZHzZJBw/4Rce1cP2lsiS8CqYTIM=
+github.com/saromanov/cowrow v0.0.0-20200116175014-5f6777ce2da7/go.mod h1:+Dmw/ecbDjWdHz4qY0cmAO2Q4srBzgu84j0dSzSUan4=
 github.com/saromanov/tables v0.0.0-20191205142233-b2f2120d80ac h1:7D3dnZt8UPzK73bPD+zFGXy2H1SWIiYzKacKiRV60Qs=
 github.com/saromanov/tables v0.0.0-20191205142233-b2f2120d80ac/go.mod h1:1d/0TwhNLSjI+jrpF/pyGuVtbb02//wzuttExDOsZLg=
 github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529 h1:nn5Wsu0esKSJiIVhscUtVbo7ada43DJhG55ua/hjS5I=

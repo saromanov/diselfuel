@@ -10,6 +10,7 @@ require (
 	github.com/hashicorp/consul/api v1.3.0
 	github.com/hashicorp/serf v0.8.5
 	github.com/pkg/sftp v1.11.0 // indirect
+	github.com/saromanov/cowrow v0.0.0-20200116175014-5f6777ce2da7
 	github.com/saromanov/tables v0.0.0-20191205142233-b2f2120d80ac
 	github.com/sfreiberg/simplessh v0.0.0-20180301191542-495cbb862a9c
 	github.com/sirupsen/logrus v1.4.2

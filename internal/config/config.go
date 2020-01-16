@@ -2,9 +2,8 @@ package config
 
 import (
 	"fmt"
-	"io/ioutil"
 
-	"gopkg.in/yaml.v2"
+	"github.com/saromanov/cowrow"
 )
 
 // Config provides definition of configuration
@@ -44,15 +43,9 @@ func (c *Config) makeDefault() {
 // Load provides loading of the config
 func Load(path string) (*Config, error) {
 
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, fmt.Errorf("unable to load config file: %v", err)
-	}
-
 	c := &Config{}
-	err = yaml.Unmarshal([]byte(data), &c)
-	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal config file: %v", err)
+	if err := cowrow.LoadByPath(path, &c); err != nil {
+		return nil, fmt.Errorf("unable to load config: %v", err)
 	}
 
 	c.makeDefault()
