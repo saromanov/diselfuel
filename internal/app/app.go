@@ -76,6 +76,7 @@ func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 			if err != nil {
 				fmt.Println("ERR: ", err)
 				response = append(response, &models.Exec{Status: "fail"})
+				return
 			}
 			response = append(response, &models.Exec{Status: "ok", Output: result})
 
