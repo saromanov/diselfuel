@@ -17,30 +17,30 @@ var (
 )
 
 // Run provides execution of command
-func Run(command, address, user, path string) error {
+func Run(command, address, user, path string) ([]byte, error) {
 	if command == "" {
-		return errNoCommand
+		return nil, errNoCommand
 	}
 	if address == "" {
-		return errNoAddress
+		return nil, errNoAddress
 	}
 	if user == "" {
-		return errNoUser
+		return nil, errNoUser
 	}
 	if path == "" {
-		return errNoPath
+		return nil, errNoPath
 	}
 	client, err := simplessh.ConnectWithKeyFile(address, user, fmt.Sprintf("/home/%s/.ssh/id_rsa", "default"))
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer client.Close()
 
 	output, err := client.Exec(command)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	fmt.Printf("Result: %s\n", output)
-	return nil
+	return output, nil
 }
