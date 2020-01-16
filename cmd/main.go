@@ -50,6 +50,7 @@ func exec(c *cli.Context) error {
 		logrus.WithError(err).Fatal("unable to execute command")
 	}
 	for _, r := range result {
+		fmt.Println(fmt.Sprintf("%s %s\n", r.Name, r.Host))
 		fmt.Println(string(r.Output))
 	}
 	return nil

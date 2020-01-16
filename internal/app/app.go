@@ -82,7 +82,7 @@ func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 				return
 			}
 			mux.Lock()
-			response = append(response, &models.Exec{Status: "ok", Output: result})
+			response = append(response, &models.Exec{Status: "ok", Output: result, Host: host.Address, Name: host.Name})
 			mux.Unlock()
 		}(ad)
 	}
