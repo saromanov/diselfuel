@@ -68,6 +68,7 @@ func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 	}
 	response := []*models.Exec{}
 	var wg sync.WaitGroup
+	mux := &sync.Mutex{}
 	wg.Add(len(filteredNodes))
 	for _, ad := range filteredNodes {
 		go func(host *models.Host) {
@@ -75,11 +76,14 @@ func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 			result, err := exec.Run(command, host.Address, host.User, query)
 			if err != nil {
 				fmt.Println("ERR: ", err)
+				mux.Lock()
 				response = append(response, &models.Exec{Status: "fail"})
+				mux.Unlock()
 				return
 			}
+			mux.Lock()
 			response = append(response, &models.Exec{Status: "ok", Output: result})
-
+			mux.Unlock()
 		}(ad)
 	}
 	wg.Wait()
