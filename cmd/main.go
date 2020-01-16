@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/saromanov/diselfuel/internal/app"
@@ -44,9 +45,12 @@ func exec(c *cli.Context) error {
 		address = addressFlag
 	}
 	item := client.New(conf, address)
-	err = item.Exec(args.Get(0), args.Get(1))
+	result, err := item.Exec(args.Get(0), args.Get(1))
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to execute command")
+	}
+	for _, r := range result {
+		fmt.Println(string(r.Output))
 	}
 	return nil
 }

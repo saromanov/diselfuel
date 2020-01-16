@@ -9,12 +9,12 @@ import (
 )
 
 // Exec returns list of hosts
-func (c *Client) Exec(query, command string) error {
+func (c *Client) Exec(query, command string) ([]*models.Exec, error) {
 	address := c.getAddress()
 	path := fmt.Sprintf("%s/v1/exec", address)
 	req, err := http.NewRequest("GET", path, nil)
 	if err != nil {
-		return fmt.Errorf("unable to create request: %v", err)
+		return nil, fmt.Errorf("unable to create request: %v", err)
 	}
 
 	q := req.URL.Query()
@@ -24,14 +24,13 @@ func (c *Client) Exec(query, command string) error {
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return fmt.Errorf("unable to send request to %s %v", path, err)
+		return nil, fmt.Errorf("unable to send request to %s %v", path, err)
 	}
 	defer resp.Body.Close()
 
 	data := []*models.Exec{}
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
-		return fmt.Errorf(decodeErrTmpl, "GetList", err)
+		return nil, fmt.Errorf(decodeErrTmpl, "GetList", err)
 	}
-	fmt.Println("DATA: ", data)
-	return nil
+	return data, nil
 }
