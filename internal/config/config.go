@@ -23,6 +23,10 @@ type Server struct {
 	DiscoveryPort    int      `yaml:"discovery_port"`
 	Tags             []string `yaml:"tags"`
 	User             string   `yaml:"user"`
+	RootDir          string   `yaml:"root_dir"`
+	ModuleDirs       []string `yaml:"module_dirs"`
+	CacheDir         string   `yaml:"cache_dir"`
+	CommandTimeout   string   `yaml:"command_timeout"`
 }
 
 // makeDefault filling default attributes at the config
