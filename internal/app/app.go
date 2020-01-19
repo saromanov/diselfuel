@@ -76,12 +76,12 @@ func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 			result, err := exec.Run(command, host.Address, host.User, query)
 			if err != nil {
 				mux.Lock()
-				response = append(response, &models.Exec{Status: "fail", Error: err.Error(), Host: host.Address, Name: host.Name})
+				response = append(response, &models.Exec{Status: models.Failed, Error: err.Error(), Host: host.Address, Name: host.Name})
 				mux.Unlock()
 				return
 			}
 			mux.Lock()
-			response = append(response, &models.Exec{Status: "ok", Output: result, Host: host.Address, Name: host.Name})
+			response = append(response, &models.Exec{Status: models.Success, Output: result, Host: host.Address, Name: host.Name})
 			mux.Unlock()
 		}(ad)
 	}
