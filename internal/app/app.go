@@ -28,7 +28,7 @@ type App struct {
 func NewService(c *config.Config, log *logrus.Logger) (*App, error) {
 	serv, err := serf.New(c, log)
 	if err != nil {
-		return nil, fmt.Errorf("unable to initalize service")
+		return nil, fmt.Errorf("unable to initialize service")
 	}
 
 	return &App{
@@ -42,7 +42,7 @@ func NewService(c *config.Config, log *logrus.Logger) (*App, error) {
 func New(c *config.Config, log *logrus.Logger) (*App, error) {
 	serv, err := serf.NewStrict(c, log)
 	if err != nil {
-		return nil, fmt.Errorf("unable to initalize service")
+		return nil, fmt.Errorf("unable to initialize service")
 	}
 	return &App{
 		conf:   c,

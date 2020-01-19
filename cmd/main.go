@@ -52,15 +52,15 @@ func exec(c *cli.Context) error {
 		logrus.WithError(err).Fatal("unable to execute command")
 	}
 	for i, r := range result {
-		if r.Status == models.Failed {
+		switch r.Status {
+		case models.Failed:
 			color.Red("%d. %s %s %s\n\n", i+1, r.Name, r.Host, r.Status)
-		} else if r.Status == models.Success {
+		case models.Success:
 			color.Green("%d. %s %s %s\n", i+1, r.Name, r.Host, r.Status)
 			fmt.Println(string(r.Output))
-		} else if r.Status == models.Timeout {
+		case models.Timeout:
 			color.Yellow("%d. %s %s %s\n", i+1, r.Name, r.Host, r.Status)
 		}
-
 	}
 	return nil
 }
@@ -122,7 +122,7 @@ func main() {
 			{
 				Name:    "exec",
 				Aliases: []string{"e"},
-				Usage:   "Excecution of the command",
+				Usage:   "Execution of the command",
 				Action:  exec,
 			},
 			{
