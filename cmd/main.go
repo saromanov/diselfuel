@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/saromanov/diselfuel/internal/app"
 	"github.com/saromanov/diselfuel/internal/client"
 	"github.com/saromanov/diselfuel/internal/config"
+	"github.com/saromanov/diselfuel/internal/models"
 	"github.com/saromanov/diselfuel/internal/server"
 	"github.com/saromanov/tables"
 	"github.com/sirupsen/logrus"
@@ -49,9 +51,14 @@ func exec(c *cli.Context) error {
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to execute command")
 	}
-	for _, r := range result {
-		fmt.Println(fmt.Sprintf("%s %s %s\n", r.Name, r.Host, r.Status))
-		fmt.Println(string(r.Output))
+	for i, r := range result {
+		if r.Status == models.Failed {
+			color.Red("%d. %s %s %s\n\n", i+1, r.Name, r.Host, r.Status)
+		} else if r.Status == models.Success {
+			color.Green("%d. %s %s %s\n", i+1, r.Name, r.Host, r.Status)
+			fmt.Println(string(r.Output))
+		}
+
 	}
 	return nil
 }
