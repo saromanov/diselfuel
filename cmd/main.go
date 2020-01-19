@@ -57,6 +57,8 @@ func exec(c *cli.Context) error {
 		} else if r.Status == models.Success {
 			color.Green("%d. %s %s %s\n", i+1, r.Name, r.Host, r.Status)
 			fmt.Println(string(r.Output))
+		} else if r.Status == models.Timeout {
+			color.Yellow("%d. %s %s %s\n", i+1, r.Name, r.Host, r.Status)
 		}
 
 	}

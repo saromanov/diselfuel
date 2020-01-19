@@ -6,8 +6,12 @@ type Status int
 const (
 	// Failed Status returns if unable to execute command
 	Failed = iota
+
 	// Success status return if command was executed correct
 	Success
+
+	// Timeout returns when command excecution is failed because of timeout
+	Timeout
 )
 
 // String returns string representation of the status
@@ -17,8 +21,9 @@ func (st Status) String() string {
 		return "fail"
 	case Success:
 		return "success"
+	case Timeout:
+		return "timeout"
 	}
-
 	return "unknown"
 }
 
