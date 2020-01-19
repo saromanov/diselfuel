@@ -75,9 +75,8 @@ func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 			defer wg.Done()
 			result, err := exec.Run(command, host.Address, host.User, query)
 			if err != nil {
-				fmt.Println("ERR: ", err)
 				mux.Lock()
-				response = append(response, &models.Exec{Status: "fail"})
+				response = append(response, &models.Exec{Status: "fail", Error: err.Error(), Host: host.Address, Name: host.Name})
 				mux.Unlock()
 				return
 			}

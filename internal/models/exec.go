@@ -6,4 +6,5 @@ type Exec struct {
 	Output []byte `json:"output"`
 	Host   string `json:"host"`
 	Name   string `json:"name"`
+	Error  string `json:"error"`
 }

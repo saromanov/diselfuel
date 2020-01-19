@@ -30,7 +30,7 @@ func (c *Client) Exec(query, command string) ([]*models.Exec, error) {
 
 	data := []*models.Exec{}
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
-		return nil, fmt.Errorf(decodeErrTmpl, "GetList", err)
+		return nil, fmt.Errorf(decodeErrTmpl, "Exec", err)
 	}
 	return data, nil
 }
