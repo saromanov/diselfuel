@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/saromanov/diselfuel/internal/discovery"
@@ -71,8 +72,12 @@ func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 	mux := &sync.Mutex{}
 	wg.Add(len(filteredNodes))
 	for _, ad := range filteredNodes {
+		done := make(chan bool)
 		go func(host *models.Host) {
-			defer wg.Done()
+			defer func() {
+				done <- true
+				wg.Done()
+			}()
 			result, err := exec.Run(command, host.Address, host.User, query)
 			if err != nil {
 				mux.Lock()
@@ -84,6 +89,13 @@ func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 			response = append(response, &models.Exec{Status: models.Success, Output: result, Host: host.Address, Name: host.Name})
 			mux.Unlock()
 		}(ad)
+
+		select {
+		case <-done:
+			continue
+		case <-time.After(10 * time.Second):
+			wg.Done()
+		}
 	}
 	wg.Wait()
 	return response, nil
