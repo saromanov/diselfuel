@@ -24,13 +24,14 @@ func Run(command, address, user, path string) ([]byte, error) {
 	if address == "" {
 		return nil, errNoAddress
 	}
-	if user == "" {
+	/*if user == "" {
 		return nil, errNoUser
-	}
+	}*/
 	if path == "" {
 		return nil, errNoPath
 	}
-	client, err := simplessh.ConnectWithKeyFile(address, user, fmt.Sprintf("/home/%s/.ssh/id_rsa", "default"))
+	client, err := simplessh.ConnectWithPassword(address, "testing", "Nnc8Audm6Ai")
+	//client, err := simplessh.ConnectWithKeyFile(address, user, fmt.Sprintf("/home/%s/.ssh/id_rsa", "default"))
 	if err != nil {
 		return nil, err
 	}
