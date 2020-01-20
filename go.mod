@@ -10,6 +10,7 @@ require (
 	github.com/go-chi/chi v4.0.2+incompatible
 	github.com/hashicorp/consul/api v1.3.0
 	github.com/hashicorp/serf v0.8.5
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/sftp v1.11.0 // indirect
 	github.com/saromanov/cowrow v0.0.0-20200116175014-5f6777ce2da7
 	github.com/saromanov/tables v0.0.0-20191205142233-b2f2120d80ac
