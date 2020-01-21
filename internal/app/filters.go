@@ -16,6 +16,7 @@ func filterNodes(query string, hosts []*models.Host) ([]*models.Host, error) {
 	if query == "*" {
 		return hosts, nil
 	}
+	query = prepareQuery(query)
 	if strings.HasPrefix(query, "node") {
 		rawResult := strings.Split(query, "=")
 		if len(rawResult) < 2 {
@@ -76,4 +77,11 @@ func filterNodes(query string, hosts []*models.Host) ([]*models.Host, error) {
 		}
 	}
 	return nil, nil
+}
+
+func prepareQuery(s string) string {
+	if strings.Contains(s, "=*") {
+		return strings.Replace(s, "=*", "=.", 1)
+	}
+	return s
 }
