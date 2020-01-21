@@ -154,5 +154,22 @@ func filterNodes(query string, hosts []*models.Host) ([]*models.Host, error) {
 			}
 		}
 	}
+
+	if strings.HasPrefix(query, "tags") {
+		rawResult := strings.Split(query, "=")
+		if len(rawResult) < 2 {
+			return nil, fmt.Errorf("invalid expression")
+		}
+		result := []*models.Host{}
+		re := regexp.MustCompile(rawResult[1])
+		for _, h := range hosts {
+			for _, t := range h.Tags {
+				if s := re.FindString(t); s != "" {
+					result = append(result, h)
+					break
+				}
+			}
+		}
+	}
 	return nil, nil
 }
