@@ -39,7 +39,7 @@ func New(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
 
 }
 
-// NewStrict provides initialization of the Consul client
+// NewStrict provides initialization of the Serf client
 func NewStrict(conf *config.Config, log *logrus.Logger) (*Service, error) {
 	defConf := serf.DefaultConfig()
 	defConf.MemberlistConfig.AdvertiseAddr = "127.0.0.1"
@@ -93,10 +93,19 @@ func (s *Service) ListNodes() ([]*models.Host, error) {
 			Address: n.Addr.String(),
 			Name:    n.Name,
 			Status:  n.Status.String(),
+			Tags:    convertTags(n.Tags),
 		}
 	}
 
 	return nodesResp, nil
+}
+
+func convertTags(tags map[string]string) []string {
+	result := []string{}
+	for _, v := range tags {
+		result = append(result, v)
+	}
+	return result
 }
 func (s *Service) Start() {
 
