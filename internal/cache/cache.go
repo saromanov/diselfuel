@@ -3,6 +3,7 @@ package cache
 import (
 	"time"
 
+	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/patrickmn/go-cache"
 )
 
@@ -12,9 +13,9 @@ type Cache struct {
 }
 
 // New provides initialization of the cache
-func New() *Cache {
+func New(с *config.Config) *Cache {
 	return &Cache{
-		c: cache.New(5*time.Minute, 10*time.Minute),
+		c: cache.New(c.CacheTimeout, c.CacheTimeout),
 	}
 }
 
