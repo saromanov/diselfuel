@@ -4,7 +4,6 @@ package exec
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/sfreiberg/simplessh"
 )
@@ -42,6 +41,5 @@ func Run(command, address, user, path string) ([]byte, error) {
 		return nil, err
 	}
 
-	fmt.Printf("Result: %s\n", output)
 	return output, nil
 }

@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -23,8 +22,6 @@ func (s *Server) Exec(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	fmt.Println("RESPONSE: ", response)
 
 	js, err := json.Marshal(response)
 	if err != nil {
