@@ -90,6 +90,19 @@ func list(c *cli.Context) error {
 	tab.Build()
 	return nil
 }
+
+func apply(c *cli.Context) error {
+	execConfig := c.String("exec-config")
+	if execConfig == "" {
+		return fmt.Errorf("exec config is not defined")
+	}
+	conf, err := config.LoadExecConfig(execConfig)
+	if err != nil {
+		return fmt.Errorf("unable to load exec config: %v", err)
+	}
+	fmt.Println(conf)
+	return nil
+}
 func logger() *logrus.Logger {
 	log := logrus.New()
 	log.SetFormatter(&logrus.JSONFormatter{})
@@ -111,6 +124,10 @@ func main() {
 				Value: "config.yaml",
 				Usage: "path to config",
 			},
+			&cli.StringFlag{
+				Name:  "exec-config",
+				Usage: "path to execution config",
+			},
 		},
 		Commands: []*cli.Command{
 			{
@@ -130,6 +147,11 @@ func main() {
 				Aliases: []string{"l"},
 				Usage:   "Return list of hosts",
 				Action:  list,
+			},
+			{
+				Name:   "apply",
+				Usage:  "Applying of execution for target servers",
+				Action: apply,
 			},
 		},
 	}
