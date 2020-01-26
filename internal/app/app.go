@@ -54,6 +54,14 @@ func (a *App) GetService() discovery.Discovery {
 	return a.serv
 }
 
+// Apply provides applying of components to the servers
+func (a *App) Apply(conf *config.Execution) error {
+	if conf == nil {
+		return fmt.Errorf("config is not defined")
+	}
+	return nil
+}
+
 // Exec provides remote command execution
 func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 	nodes, err := a.serv.ListNodes()
