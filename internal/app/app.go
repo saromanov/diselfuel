@@ -99,7 +99,7 @@ func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 		select {
 		case <-done:
 			continue
-		case <-time.After(10 * time.Second):
+		case <-time.After(15 * time.Second):
 			mux.Lock()
 			response = append(response, &models.Exec{Status: models.Timeout, Host: ad.Address, Name: ad.Name})
 			mux.Unlock()

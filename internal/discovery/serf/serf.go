@@ -78,6 +78,7 @@ func join(c *serf.Serf, conf *config.Config) error {
 	}
 
 	if len(nodes) == 0 {
+		log.Infof("Network not contains any nodes")
 		return nil
 	}
 	if _, err := c.Join(nodes, true); err != nil {
