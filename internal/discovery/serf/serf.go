@@ -77,6 +77,9 @@ func join(c *serf.Serf, conf *config.Config) error {
 		nodes = append(nodes, fmt.Sprintf("%s:%d", s.Address, s.Port))
 	}
 
+	if len(nodes) == 0 {
+		return nil
+	}
 	if _, err := c.Join(nodes, true); err != nil {
 		return fmt.Errorf("unable to join nodes: %v", err)
 	}
