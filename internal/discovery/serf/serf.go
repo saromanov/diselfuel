@@ -91,15 +91,16 @@ func join(c *serf.Serf, conf *config.Config) error {
 func (s *Service) ListNodes(req discovery.FilterNodes) ([]*models.Host, error) {
 
 	members := s.Client.Members()
-	nodesResp := make([]*models.Host, len(members))
-	for i, n := range members {
+	nodesResp := []*models.Host{}
+	for _, n := range members {
 		tags := convertTags(n.Tags)
 		if req.Tag != "" {
 			if findInTags(req.Tag, tags) {
-				nodesResp[i] = convertHost(n)
+				nodesResp = append(nodesResp, convertHost(n))
 			}
 			continue
 		}
+		nodesResp = append(nodesResp, convertHost(n))
 	}
 
 	return nodesResp, nil
