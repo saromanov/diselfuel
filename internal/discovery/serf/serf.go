@@ -94,13 +94,11 @@ func (s *Service) ListNodes(req discovery.FilterNodes) ([]*models.Host, error) {
 	nodesResp := make([]*models.Host, len(members))
 	for i, n := range members {
 		tags := convertTags(n.Tags)
-		if req.Tag != "" && findInTags(req.Tag, tags) {
-			nodesResp[i] = &models.Host{
-				Address: n.Addr.String(),
-				Name:    n.Name,
-				Status:  n.Status.String(),
-				Tags:    convertTags(n.Tags),
+		if req.Tag != "" {
+			if findInTags(req.Tag, tags) {
+				nodesResp[i] = convertHost(n)
 			}
+			continue
 		}
 	}
 
@@ -114,6 +112,15 @@ func convertTags(tags map[string]string) []string {
 		result = append(result, v)
 	}
 	return result
+}
+
+func convertHost(n serf.Member) *models.Host {
+	return &models.Host{
+		Address: n.Addr.String(),
+		Name:    n.Name,
+		Status:  n.Status.String(),
+		Tags:    convertTags(n.Tags),
+	}
 }
 
 func findInTags(tag string, tags []string) bool {
