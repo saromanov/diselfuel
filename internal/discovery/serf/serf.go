@@ -88,7 +88,7 @@ func join(c *serf.Serf, conf *config.Config) error {
 }
 
 // ListNodes return list of nodes
-func (s *Service) ListNodes() ([]*models.Host, error) {
+func (s *Service) ListNodes(req discovery.FilterNodes) ([]*models.Host, error) {
 
 	members := s.Client.Members()
 	nodesResp := make([]*models.Host, len(members))
@@ -102,6 +102,7 @@ func (s *Service) ListNodes() ([]*models.Host, error) {
 	}
 
 	return nodesResp, nil
+
 }
 
 func convertTags(tags map[string]string) []string {
