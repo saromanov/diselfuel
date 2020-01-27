@@ -107,6 +107,8 @@ func (s *Service) ListNodes(req discovery.FilterNodes) ([]*models.Host, error) {
 
 }
 
+// convertTags provides converting of tags from serf representation
+// to the slice of words
 func convertTags(tags map[string]string) []string {
 	result := []string{}
 	for _, v := range tags {
@@ -115,6 +117,8 @@ func convertTags(tags map[string]string) []string {
 	return result
 }
 
+// convertHost provides converting of serf representation
+// to the inner representation
 func convertHost(n serf.Member) *models.Host {
 	return &models.Host{
 		Address: n.Addr.String(),
