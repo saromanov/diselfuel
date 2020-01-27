@@ -65,11 +65,16 @@ func (a *App) Exec(query, command string) ([]*models.Exec, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to filter nodes: %v", err)
 	}
+	return a.exec(filteredNodes, query, command)
+}
+
+// exec provides execution of the command on target host
+func (a *App) exec(hosts []*models.Host, query, command string) ([]*models.Exec, error) {
 	response := []*models.Exec{}
 	var wg sync.WaitGroup
 	mux := &sync.Mutex{}
-	wg.Add(len(filteredNodes))
-	for _, ad := range filteredNodes {
+	wg.Add(len(hosts))
+	for _, ad := range hosts {
 		done := make(chan bool)
 		go func(host *models.Host) {
 			defer func() {

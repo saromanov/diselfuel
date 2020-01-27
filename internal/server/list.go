@@ -7,7 +7,7 @@ import (
 
 func (s *Server) List(w http.ResponseWriter, r *http.Request) {
 	service := s.a.GetService()
-	nodes, err := service.ListNodes()
+	nodes, err := service.ListNodes(nil)
 	if err != nil {
 		panic(err)
 	}
