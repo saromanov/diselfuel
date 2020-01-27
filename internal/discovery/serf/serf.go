@@ -88,7 +88,7 @@ func join(c *serf.Serf, conf *config.Config) error {
 }
 
 // ListNodes return list of nodes
-func (s *Service) ListNodes(req discovery.FilterNodes) ([]*models.Host, error) {
+func (s *Service) ListNodes(req models.FilterNodes) ([]*models.Host, error) {
 
 	members := s.Client.Members()
 	nodesResp := []*models.Host{}

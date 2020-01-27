@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/saromanov/diselfuel/internal/config"
-	"github.com/saromanov/diselfuel/internal/discovery"
 	"github.com/saromanov/diselfuel/internal/models"
 )
 
@@ -31,7 +30,7 @@ func (a *App) getHosts(tasks []config.Task) ([]*models.Host, error) {
 	nodes := []*models.Host{}
 	for _, t := range tasks {
 		if t.Tag != "" {
-			resp, err := a.serv.ListNodes(discovery.FilterNodes{
+			resp, err := a.serv.ListNodes(models.FilterNodes{
 				Tag: t.Tag,
 			})
 			if err != nil {

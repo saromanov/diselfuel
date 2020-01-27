@@ -35,3 +35,8 @@ type Exec struct {
 	Name   string `json:"name"`
 	Error  string `json:"error"`
 }
+
+// FilterNodes provides filtering of the nodes by params
+type FilterNodes struct {
+	Tag string
+}
