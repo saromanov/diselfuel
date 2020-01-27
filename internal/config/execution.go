@@ -13,7 +13,9 @@ type Execution struct {
 }
 
 type Task struct {
-	Name string `json:"name"`
+	Name    string `json:"name"`
+	Tag     string `json:"tag"`
+	Command string `json:"command"`
 }
 
 // LoadExecConfig provides loading of the execution config
