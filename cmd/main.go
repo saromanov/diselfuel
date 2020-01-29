@@ -109,9 +109,27 @@ func apply(c *cli.Context) error {
 	if addressFlag != "" {
 		address = addressFlag
 	}
-	item := client.NewForApply(conf, execConf, address)
+	item := client.New(conf, address)
+	_, err = item.Apply(&models.Execution{
+		Tasks: convertTasks(execConf.Tasks),
+	})
+	if err != nil {
+		return fmt.Errorf("unable to make Apply: %v", err)
+	}
 	fmt.Println(conf)
 	return nil
+}
+
+func convertTasks(tasks []config.Task) []models.Task {
+	resp := []models.Task{}
+	for _, t := range tasks {
+		resp = append(resp, models.Task{
+			Name:    t.Name,
+			Tag:     t.Tag,
+			Command: t.Command,
+		})
+	}
+	return resp
 }
 func logger() *logrus.Logger {
 	log := logrus.New()

@@ -21,12 +21,6 @@ func (c *Client) Apply(dataReq *models.Execution) (*models.ExecutionResponse, er
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("unable to send request to %s %v", path, err)
