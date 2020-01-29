@@ -11,6 +11,7 @@ import (
 type Client struct {
 	client  *http.Client
 	cfg     *config.Config
+	execCfg *config.Execution
 	address string
 }
 
@@ -20,6 +21,18 @@ func New(cfg *config.Config, address string) *Client {
 		client:  &http.Client{},
 		cfg:     cfg,
 		address: address,
+		execCfg: nil,
+	}
+}
+
+// NewForApply provides loading of the config
+// for apply command
+func NewForApply(cfg *config.Config, execCfg *config.Execution, address string) *Client {
+	return &Client{
+		client:  &http.Client{},
+		cfg:     cfg,
+		address: address,
+		execCfg: execCfg,
 	}
 }
 

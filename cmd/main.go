@@ -109,7 +109,7 @@ func apply(c *cli.Context) error {
 	if addressFlag != "" {
 		address = addressFlag
 	}
-	item := client.New(conf, address)
+	item := client.NewForApply(conf, execConf, address)
 	fmt.Println(conf)
 	return nil
 }
