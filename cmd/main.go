@@ -92,14 +92,24 @@ func list(c *cli.Context) error {
 }
 
 func apply(c *cli.Context) error {
+	addressFlag := c.String("address")
+	conf, err := config.Load("config.yaml")
+	if err != nil {
+		logrus.WithError(err).Fatal("unable to load config")
+	}
 	execConfig := c.String("exec-config")
 	if execConfig == "" {
 		return fmt.Errorf("exec config is not defined")
 	}
-	conf, err := config.LoadExecConfig(execConfig)
+	execConf, err := config.LoadExecConfig(execConfig)
 	if err != nil {
 		return fmt.Errorf("unable to load exec config: %v", err)
 	}
+	address := "http://127.0.0.1:8081"
+	if addressFlag != "" {
+		address = addressFlag
+	}
+	item := client.New(conf, address)
 	fmt.Println(conf)
 	return nil
 }
