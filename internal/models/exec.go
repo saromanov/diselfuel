@@ -40,3 +40,20 @@ type Exec struct {
 type FilterNodes struct {
 	Tag string
 }
+
+// Execution defines configuration for execution of the
+// pre-defined tasks
+type Execution struct {
+	Tasks []Task `json:"tasks"`
+}
+
+// Task provides definition of the task
+type Task struct {
+	Name    string `json:"name"`
+	Tag     string `json:"tag"`
+	Command string `json:"command"`
+}
+
+// ExecutionResponse provides response after command
+type ExecutionResponse struct {
+}
