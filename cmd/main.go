@@ -52,14 +52,15 @@ func exec(c *cli.Context) error {
 		logrus.WithError(err).Fatal("unable to execute command")
 	}
 	for i, r := range result {
+		num := i + 1
 		switch r.Status {
 		case models.Failed:
-			color.Red("%d. %s %s %s\n\n", i+1, r.Name, r.Host, r.Status)
+			color.Red("%d. %s %s %s\n\n", num, r.Name, r.Host, r.Status)
 		case models.Success:
-			color.Green("%d. %s %s %s\n", i+1, r.Name, r.Host, r.Status)
+			color.Green("%d. %s %s %s\n", num, r.Name, r.Host, r.Status)
 			fmt.Println(string(r.Output))
 		case models.Timeout:
-			color.Yellow("%d. %s %s %s\n", i+1, r.Name, r.Host, r.Status)
+			color.Yellow("%d. %s %s %s\n", num, r.Name, r.Host, r.Status)
 		}
 	}
 	return nil
