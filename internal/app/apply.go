@@ -49,11 +49,3 @@ func (a *App) getHosts(tasks []models.Task) ([]*models.Host, error) {
 	}
 	return nodes, nil
 }
-
-func modelsExecToExecutionResponse(hosts []*models.Host) *models.ExecutionResponse {
-	response := &models.ExecutionResponse{}
-	if len(hosts) == 0 {
-		return response
-	}
-
-}

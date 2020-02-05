@@ -10,7 +10,7 @@ import (
 )
 
 // Apply provides sending request for execution of apply commands
-func (c *Client) Apply(dataReq *models.Execution) (*models.ExecutionResponse, error) {
+func (c *Client) Apply(dataReq *models.Execution) ([]*models.Exec, error) {
 	address := c.getAddress()
 	path := fmt.Sprintf("%s/v1/apply", address)
 	marshal, err := json.Marshal(dataReq)
@@ -27,7 +27,7 @@ func (c *Client) Apply(dataReq *models.Execution) (*models.ExecutionResponse, er
 	}
 	defer resp.Body.Close()
 
-	data := &models.ExecutionResponse{}
+	data := []*models.Exec{}
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
 		return nil, fmt.Errorf(decodeErrTmpl, "Exec", err)
 	}
