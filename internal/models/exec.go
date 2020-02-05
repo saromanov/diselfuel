@@ -53,7 +53,3 @@ type Task struct {
 	Tag     string `json:"tag"`
 	Command string `json:"command"`
 }
-
-// ExecutionResponse provides response after command
-type ExecutionResponse struct {
-}

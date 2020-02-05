@@ -7,7 +7,7 @@ import (
 )
 
 // Apply provides applying of components to the servers
-func (a *App) Apply(conf *models.Execution) (*models.ExecutionResponse, error) {
+func (a *App) Apply(conf *models.Execution) ([]*models.Exec, error) {
 	if conf == nil {
 		return nil, fmt.Errorf("config is not defined")
 	}
@@ -19,10 +19,11 @@ func (a *App) Apply(conf *models.Execution) (*models.ExecutionResponse, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to get hosts: %v", err)
 	}
-	if _, err := a.exec(hosts, "test", "test"); err != nil {
+	execResult, err := a.exec(hosts, "test", "test")
+	if err != nil {
 		return nil, fmt.Errorf("unable to execute commands: %v", err)
 	}
-	return nil, nil
+	return execResult, nil
 }
 
 func (a *App) getHosts(tasks []models.Task) ([]*models.Host, error) {
@@ -47,4 +48,12 @@ func (a *App) getHosts(tasks []models.Task) ([]*models.Host, error) {
 		}
 	}
 	return nodes, nil
+}
+
+func modelsExecToExecutionResponse(hosts []*models.Host) *models.ExecutionResponse {
+	response := &models.ExecutionResponse{}
+	if len(hosts) == 0 {
+		return response
+	}
+
 }
