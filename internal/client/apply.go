@@ -31,5 +31,8 @@ func (c *Client) Apply(dataReq *models.Execution) (*models.ExecutionResponse, er
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
 		return nil, fmt.Errorf(decodeErrTmpl, "Exec", err)
 	}
+	if data == nil {
+		return nil, fmt.Errorf(applyErrTml, "Exec")
+	}
 	return data, nil
 }

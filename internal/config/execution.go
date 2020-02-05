@@ -12,6 +12,7 @@ type Execution struct {
 	Tasks []Task `json:"tasks"`
 }
 
+// Task defines representation of the task
 type Task struct {
 	Name    string `json:"name"`
 	Tag     string `json:"tag"`
@@ -19,6 +20,7 @@ type Task struct {
 }
 
 // LoadExecConfig provides loading of the execution config
+// for tasks
 func LoadExecConfig(path string) (*Execution, error) {
 
 	c := &Execution{}

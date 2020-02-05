@@ -117,7 +117,6 @@ func apply(c *cli.Context) error {
 	if err != nil {
 		logrus.WithError(err).Fatalf("unable to make Apply: %v", err)
 	}
-	fmt.Println(conf)
 	return nil
 }
 
