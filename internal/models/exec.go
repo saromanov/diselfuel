@@ -38,7 +38,8 @@ type Exec struct {
 
 // FilterNodes provides filtering of the nodes by params
 type FilterNodes struct {
-	Tag string
+	Tag  string
+	Name string
 }
 
 // Execution defines configuration for execution of the

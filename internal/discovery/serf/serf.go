@@ -100,6 +100,12 @@ func (s *Service) ListNodes(req models.FilterNodes) ([]*models.Host, error) {
 			}
 			continue
 		}
+		if req.Name != "" {
+			if req.Name == n.Name {
+				nodesResp = append(nodesResp, convertHost(n))
+			}
+			continue
+		}
 		nodesResp = append(nodesResp, convertHost(n))
 	}
 
@@ -136,6 +142,7 @@ func findInTags(tag string, tags []string) bool {
 	}
 	return false
 }
+
 func (s *Service) Start() {
 
 }
