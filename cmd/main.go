@@ -100,11 +100,11 @@ func apply(c *cli.Context) error {
 	}
 	execConfig := c.String("exec-config")
 	if execConfig == "" {
-		return fmt.Errorf("exec config is not defined")
+		logrus.Fatal("exec config is not defined")
 	}
 	execConf, err := config.LoadExecConfig(execConfig)
 	if err != nil {
-		return fmt.Errorf("unable to load exec config: %v", err)
+		logrus.WithError(err).Fatalf("unable to load exec config: %v", err)
 	}
 	address := "http://127.0.0.1:8081"
 	if addressFlag != "" {
@@ -115,7 +115,7 @@ func apply(c *cli.Context) error {
 		Tasks: convertTasks(execConf.Tasks),
 	})
 	if err != nil {
-		return fmt.Errorf("unable to make Apply: %v", err)
+		logrus.WithError(err).Fatalf("unable to make Apply: %v", err)
 	}
 	fmt.Println(conf)
 	return nil
@@ -160,22 +160,19 @@ func main() {
 		},
 		Commands: []*cli.Command{
 			{
-				Name:    "start",
-				Aliases: []string{"i"},
-				Usage:   "starting of the server",
-				Action:  start,
+				Name:   "start",
+				Usage:  "starting of the server",
+				Action: start,
 			},
 			{
-				Name:    "exec",
-				Aliases: []string{"e"},
-				Usage:   "Execution of the command",
-				Action:  exec,
+				Name:   "exec",
+				Usage:  "Execution of the command",
+				Action: exec,
 			},
 			{
-				Name:    "list",
-				Aliases: []string{"l"},
-				Usage:   "Return list of hosts",
-				Action:  list,
+				Name:   "list",
+				Usage:  "Return list of hosts",
+				Action: list,
 			},
 			{
 				Name:   "apply",
