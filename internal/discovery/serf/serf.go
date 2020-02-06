@@ -106,7 +106,9 @@ func (s *Service) ListNodes(req models.FilterNodes) ([]*models.Host, error) {
 			}
 			continue
 		}
-		nodesResp = append(nodesResp, convertHost(n))
+		if req.Name == "" && req.Tag == "" {
+			nodesResp = append(nodesResp, convertHost(n))
+		}
 	}
 
 	return nodesResp, nil
