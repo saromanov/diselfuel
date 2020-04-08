@@ -8,6 +8,10 @@ import (
 	"github.com/saromanov/diselfuel/internal/models"
 )
 
+type filterRequest struct {
+	query string
+	prefix string
+}
 // filterNodes provides filtering of nodes by the query
 // for example:
 // node=test1
@@ -17,65 +21,33 @@ func filterNodes(query string, hosts []*models.Host) ([]*models.Host, error) {
 		return hosts, nil
 	}
 	query = prepareQuery(query)
-	if strings.HasPrefix(query, "node") {
-		rawResult := strings.Split(query, "=")
-		if len(rawResult) < 2 {
-			return nil, fmt.Errorf("invalid expression")
-		}
-		result := []*models.Host{}
-		re := regexp.MustCompile(rawResult[1])
-		for _, h := range hosts {
-			if s := re.FindString(h.Name); s != "" {
-				result = append(result, h)
+	filteredHosts, err := func(f []filterRequest, hosts []*models.Host) ([]*models.Host, error)) ([]*models.Host, error) {
+		for _, m := range f {
+			hosts, err := generalFilter(m.query, m.prefix, m.hosts)
+			if err != nil {
+				return nil, err
+			}
+			if len(hosts) > 0 {
+				return hosts, nil
 			}
 		}
-
-		return result, nil
-	}
-	if strings.HasPrefix(query, "address") {
-		rawResult := strings.Split(query, "=")
-		if len(rawResult) < 2 {
-			return nil, fmt.Errorf("invalid expression")
-		}
-		result := []*models.Host{}
-		re := regexp.MustCompile(rawResult[1])
-		for _, h := range hosts {
-			if s := re.FindString(h.Address); s != "" {
-				result = append(result, h)
-			}
-		}
-	}
-
-	if strings.HasPrefix(query, "user") {
-		rawResult := strings.Split(query, "=")
-		if len(rawResult) < 2 {
-			return nil, fmt.Errorf("invalid expression")
-		}
-		result := []*models.Host{}
-		re := regexp.MustCompile(rawResult[1])
-		for _, h := range hosts {
-			if s := re.FindString(h.User); s != "" {
-				result = append(result, h)
-			}
-		}
-	}
-
-	if strings.HasPrefix(query, "tags") {
-		rawResult := strings.Split(query, "=")
-		if len(rawResult) < 2 {
-			return nil, fmt.Errorf("invalid expression")
-		}
-		result := []*models.Host{}
-		re := regexp.MustCompile(rawResult[1])
-		for _, h := range hosts {
-			for _, t := range h.Tags {
-				if s := re.FindString(t); s != "" {
-					result = append(result, h)
-					break
-				}
-			}
-		}
-	}
+		return nil, nil
+	}([]filterRequest{filterRequest{
+		query: query,
+		prefix: "node",
+	},
+	filterRequest{
+		query: query,
+		prefix: "address",
+	},
+	filterRequest{
+		query: query,
+		prefix: "user",
+	},
+	filterRequest{
+		query: query,
+		prefix: "tags",
+	},}, hosts)
 	return nil, nil
 }
 
@@ -84,4 +56,23 @@ func prepareQuery(s string) string {
 		return strings.Replace(s, "=*", "=.", 1)
 	}
 	return s
+}
+
+func generalFilter(query, prefix string, hosts []*models.Host) ([]*models.Host, error) {
+	if !strings.HasPrefix(query, "node") {
+		return nil, nil
+	}
+	rawResult := strings.Split(query, "=")
+	if len(rawResult) < 2 {
+		return nil, fmt.Errorf("invalid expression")
+	}
+	result := []*models.Host{}
+	re := regexp.MustCompile(rawResult[1])
+	for _, h := range hosts {
+		if s := re.FindString(h.Name); s != "" {
+			result = append(result, h)
+		}
+	}
+
+	return result, nil
 }

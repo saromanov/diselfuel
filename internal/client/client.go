@@ -36,6 +36,7 @@ func NewForApply(cfg *config.Config, execCfg *config.Execution, address string) 
 	}
 }
 
+// getAddress returns address of the host in default case
 func (c *Client) getAddress() string {
 	address := c.address
 	if address != "" {
