@@ -9,9 +9,10 @@ import (
 )
 
 type filterRequest struct {
-	query string
+	query  string
 	prefix string
 }
+
 // filterNodes provides filtering of nodes by the query
 // for example:
 // node=test1
@@ -21,9 +22,9 @@ func filterNodes(query string, hosts []*models.Host) ([]*models.Host, error) {
 		return hosts, nil
 	}
 	query = prepareQuery(query)
-	filteredHosts, err := func(f []filterRequest, hosts []*models.Host) ([]*models.Host, error)) ([]*models.Host, error) {
+	filteredHosts, err := func(f []filterRequest, hosts []*models.Host) ([]*models.Host, error) {
 		for _, m := range f {
-			hosts, err := generalFilter(m.query, m.prefix, m.hosts)
+			hosts, err := generalFilter(m.query, m.prefix, hosts)
 			if err != nil {
 				return nil, err
 			}
@@ -33,22 +34,22 @@ func filterNodes(query string, hosts []*models.Host) ([]*models.Host, error) {
 		}
 		return nil, nil
 	}([]filterRequest{filterRequest{
-		query: query,
+		query:  query,
 		prefix: "node",
 	},
-	filterRequest{
-		query: query,
-		prefix: "address",
-	},
-	filterRequest{
-		query: query,
-		prefix: "user",
-	},
-	filterRequest{
-		query: query,
-		prefix: "tags",
-	},}, hosts)
-	return nil, nil
+		filterRequest{
+			query:  query,
+			prefix: "address",
+		},
+		filterRequest{
+			query:  query,
+			prefix: "user",
+		},
+		filterRequest{
+			query:  query,
+			prefix: "tags",
+		}}, hosts)
+	return filteredHosts, err
 }
 
 func prepareQuery(s string) string {
