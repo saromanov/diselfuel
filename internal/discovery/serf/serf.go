@@ -12,6 +12,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const defaultAddress = "127.0.0.1"
+
+// Service adds definition for serf discovery
 type Service struct {
 	Name   string
 	TTL    time.Duration
@@ -41,10 +44,13 @@ func New(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
 
 // NewStrict provides initialization of the Serf client
 func NewStrict(conf *config.Config, log *logrus.Logger) (*Service, error) {
+	if conf == nil {
+		return nil, fmt.Errorf("discovery: config is not defined")
+	}
 	defConf := serf.DefaultConfig()
-	defConf.MemberlistConfig.AdvertiseAddr = "127.0.0.1"
+	defConf.MemberlistConfig.AdvertiseAddr = defaultAddress
 	defConf.MemberlistConfig.AdvertisePort = 7779
-	defConf.MemberlistConfig.BindAddr = "127.0.0.1"
+	defConf.MemberlistConfig.BindAddr = defaultAddress
 	defConf.MemberlistConfig.BindPort = 7781
 	c, err := serf.Create(defConf)
 	if err != nil {
