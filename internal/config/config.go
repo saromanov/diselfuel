@@ -20,6 +20,7 @@ type Server struct {
 	Name             string        `yaml:"name"`
 	Address          string        `yaml:"address"`
 	Port             int           `yaml:"port"`
+	Type             string        `yaml:"type"`
 	DiscoveryAddress string        `yaml:"discovery_address"`
 	DiscoveryPort    int           `yaml:"discovery_port"`
 	Tags             []string      `yaml:"tags"`

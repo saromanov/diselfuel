@@ -22,12 +22,19 @@ func start(c *cli.Context) error {
 	}
 
 	log := logger()
+	if conf.Server.Type == "master" {
+		newMaster(log, conf)
+	}
+	return nil
+}
+
+// provides initialization of master
+func newMaster(log *logrus.Logger, conf *config.Config) {
 	a, err := app.NewService(conf, log)
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to initialize app")
 	}
 	server.New(a, conf, log)
-	return nil
 }
 
 // exec provides execution of commands
