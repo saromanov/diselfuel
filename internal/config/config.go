@@ -9,7 +9,7 @@ import (
 
 // Config provides definition of configuration
 type Config struct {
-	Master *Server  `yaml:"master"`
+	Server *Server  `yaml:"server"`
 	Slaves []Server `yaml:"slaves"`
 	Tags   []string `yaml:"tags"`
 }
@@ -36,8 +36,8 @@ func (c *Config) makeDefault() {
 	if c == nil {
 		c = &Config{}
 	}
-	if c.Master == nil {
-		c.Master = &Server{
+	if c.Server == nil {
+		c.Server = &Server{
 			Name:             "default",
 			Address:          "127.0.0.1",
 			Port:             8080,

@@ -42,9 +42,9 @@ func (c *Client) getAddress() string {
 	if address != "" {
 		return address
 	}
-	if c == nil || c.cfg == nil || c.cfg.Master == nil || c.cfg.Master.Address == "" {
-		panic("unable to get master host")
+	if c == nil || c.cfg == nil || c.cfg.Server == nil || c.cfg.Server.Address == "" {
+		panic("unable to get Server host")
 	}
 
-	return c.cfg.Master.Address
+	return c.cfg.Server.Address
 }

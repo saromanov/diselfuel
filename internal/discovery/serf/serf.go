@@ -26,8 +26,8 @@ type Service struct {
 func New(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
 	defConf := serf.DefaultConfig()
 	defConf.Tags = addTags(conf.Tags)
-	defConf.MemberlistConfig.BindAddr = conf.Master.DiscoveryAddress
-	defConf.MemberlistConfig.BindPort = conf.Master.DiscoveryPort
+	defConf.MemberlistConfig.BindAddr = conf.Server.DiscoveryAddress
+	defConf.MemberlistConfig.BindPort = conf.Server.DiscoveryPort
 	c, err := serf.Create(defConf)
 	if err != nil {
 		return nil, fmt.Errorf("unable to start serf client: %v", err)

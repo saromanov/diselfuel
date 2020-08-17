@@ -1,0 +1,4 @@
+name: slave1
+type: slave
+discovery_address: localhost
+discovery_port: 7777
