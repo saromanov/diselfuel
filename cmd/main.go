@@ -31,21 +31,25 @@ func start(c *cli.Context) error {
 }
 
 // exec provides execution of commands
+// first argument is a query of hosts
+// for example: "*" provides execution for all hosts
+//
+// second argument is a command
+// for example: "ls -la"
 func exec(c *cli.Context) error {
 	args := c.Args()
 	if args.Len() < 2 {
 		logrus.Fatal("not enough arguments")
 	}
-	addressFlag := c.String("address")
+	address := c.String("address")
+	if address == "" {
+		logrus.Fatal("logrus flag is not defined")
+	}
 	conf, err := config.Load("config.yaml")
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to load config")
 	}
 
-	address := "http://127.0.0.1:8081"
-	if addressFlag != "" {
-		address = addressFlag
-	}
 	item := client.New(conf, address)
 	result, err := item.Exec(args.Get(0), args.Get(1))
 	if err != nil {
@@ -155,6 +159,10 @@ func main() {
 			&cli.StringFlag{
 				Name:  "exec-config",
 				Usage: "path to execution config",
+			},
+			&cli.StringFlag{
+				Name:  "type",
+				Usage: "type can be master or slave",
 			},
 		},
 		Commands: []*cli.Command{
