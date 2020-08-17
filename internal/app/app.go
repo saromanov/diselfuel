@@ -75,10 +75,10 @@ func (a *App) exec(hosts []*models.Host, query, command string) ([]*models.Exec,
 	mux := &sync.Mutex{}
 	wg.Add(len(hosts))
 	for _, ad := range hosts {
-		done := make(chan bool)
+		done := make(chan struct{})
 		go func(host *models.Host) {
 			defer func() {
-				done <- true
+				done <- struct{}{}
 				wg.Done()
 			}()
 			result, err := exec.Run(command, host.Address, host.User, query)
