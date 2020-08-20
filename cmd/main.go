@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/fatih/color"
 	"github.com/saromanov/diselfuel/internal/app"
@@ -50,11 +51,21 @@ func exec(c *cli.Context) error {
 	}
 	address := c.String("address")
 	if address == "" {
-		logrus.Fatal("logrus flag is not defined")
+		logrus.Fatal("address is not defined")
 	}
-	conf, err := config.Load("config.yaml")
+	address = makeAddress(address)
+
+	var (
+		conf *config.Config
+		err  error
+	)
+	conf, err = config.Load("config.yaml")
 	if err != nil {
-		logrus.WithError(err).Fatal("unable to load config")
+		conf = &config.Config{
+			Server: &config.Server{
+				Address: address,
+			},
+		}
 	}
 
 	item := client.New(conf, address)
@@ -75,6 +86,14 @@ func exec(c *cli.Context) error {
 		}
 	}
 	return nil
+}
+
+// makeAddress provides making of address for master server
+func makeAddress(address string) string {
+	if strings.HasPrefix(address, "http") {
+		return address
+	}
+	return fmt.Sprintf("http://%s", address)
 }
 
 // list returns list of nodes
