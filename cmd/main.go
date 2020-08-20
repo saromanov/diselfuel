@@ -25,6 +25,8 @@ func start(c *cli.Context) error {
 	log := logger()
 	if conf.Server.Type == "master" {
 		newMaster(log, conf)
+	} else if conf.Server.Type == "slave" {
+		newSlave(log, conf)
 	}
 	return nil
 }
@@ -36,6 +38,13 @@ func newMaster(log *logrus.Logger, conf *config.Config) {
 		logrus.WithError(err).Fatal("unable to initialize app")
 	}
 	server.New(a, conf, log)
+}
+
+func newSlave(log *logrus.Logger, conf *config.Config) {
+	_, err := app.New(conf, log)
+	if err != nil {
+		logrus.WithError(err).Fatal("unable to initialize slave")
+	}
 }
 
 // exec provides execution of commands
