@@ -41,10 +41,12 @@ func newMaster(log *logrus.Logger, conf *config.Config) {
 }
 
 func newSlave(log *logrus.Logger, conf *config.Config) {
-	_, err := app.New(conf, log)
+	_, err := app.NewService(conf, log)
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to initialize slave")
 	}
+
+	select {}
 }
 
 // exec provides execution of commands

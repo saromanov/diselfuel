@@ -42,6 +42,25 @@ func New(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
 
 }
 
+// NewMaster provides initialization of master
+func NewMaster(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
+	defConf := serf.DefaultConfig()
+	defConf.Tags = addTags(conf.Tags)
+	defConf.MemberlistConfig.BindAddr = conf.Server.DiscoveryAddress
+	defConf.MemberlistConfig.BindPort = conf.Server.DiscoveryPort
+	c, err := serf.Create(defConf)
+	if err != nil {
+		return nil, fmt.Errorf("unable to start serf client: %v", err)
+	}
+
+	if err := join(c, conf); err != nil {
+		return nil, err
+	}
+	return &Service{
+		Client: c,
+	}, nil
+}
+
 // NewStrict provides initialization of the Serf client
 func NewStrict(conf *config.Config, log *logrus.Logger) (*Service, error) {
 	if conf == nil {
@@ -49,7 +68,7 @@ func NewStrict(conf *config.Config, log *logrus.Logger) (*Service, error) {
 	}
 	defConf := serf.DefaultConfig()
 	defConf.MemberlistConfig.AdvertiseAddr = defaultAddress
-	defConf.MemberlistConfig.AdvertisePort = 7779
+	defConf.MemberlistConfig.AdvertisePort = conf.Server.DiscoveryPort
 	defConf.MemberlistConfig.BindAddr = defaultAddress
 	defConf.MemberlistConfig.BindPort = 7781
 	c, err := serf.Create(defConf)
