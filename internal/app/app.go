@@ -24,6 +24,7 @@ type App struct {
 // NewService provides initialization of the app
 // with initialization of service
 func NewService(c *config.Config, log *logrus.Logger) (*App, error) {
+
 	serv, err := serf.New(c, log)
 	if err != nil {
 		return nil, fmt.Errorf("unable to initialize service")

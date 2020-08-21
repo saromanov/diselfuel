@@ -21,44 +21,42 @@ type Service struct {
 	Client *serf.Serf
 }
 
-// New provides initialization of the service
-// with registration of the new client
+// New provides initialization of master
 func New(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
-	defConf := serf.DefaultConfig()
-	defConf.Tags = addTags(conf.Tags)
-	defConf.MemberlistConfig.BindAddr = conf.Server.DiscoveryAddress
-	defConf.MemberlistConfig.BindPort = conf.Server.DiscoveryPort
-	c, err := serf.Create(defConf)
-	if err != nil {
-		return nil, fmt.Errorf("unable to start serf client: %v", err)
+	if conf.Server.Type == "master" {
+		c, _, err := newService(conf, log)
+		return c, err
 	}
-
-	if err := join(c, conf); err != nil {
-		return nil, err
-	}
-	return &Service{
-		Client: c,
-	}, nil
-
+	return newSlave(conf, log)
 }
 
-// NewMaster provides initialization of master
-func NewMaster(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
+// NewSlave provides initialization of the slave service
+// with registration of the new client
+func newSlave(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
+	s, client, err := newService(conf, log)
+	if err != nil {
+		return nil, err
+	}
+	if err := join(client, conf); err != nil {
+		return nil, fmt.Errorf("unable to join nodes")
+	}
+	return s, nil
+}
+
+// general method for initialization of service
+func newService(conf *config.Config, log *logrus.Logger) (discovery.Discovery, *serf.Serf, error) {
 	defConf := serf.DefaultConfig()
 	defConf.Tags = addTags(conf.Tags)
 	defConf.MemberlistConfig.BindAddr = conf.Server.DiscoveryAddress
 	defConf.MemberlistConfig.BindPort = conf.Server.DiscoveryPort
 	c, err := serf.Create(defConf)
 	if err != nil {
-		return nil, fmt.Errorf("unable to start serf client: %v", err)
+		return nil, nil, fmt.Errorf("unable to start serf client: %v", err)
 	}
 
-	if err := join(c, conf); err != nil {
-		return nil, err
-	}
 	return &Service{
 		Client: c,
-	}, nil
+	}, c, nil
 }
 
 // NewStrict provides initialization of the Serf client
