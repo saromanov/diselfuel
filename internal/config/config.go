@@ -10,7 +10,7 @@ import (
 // Config provides definition of configuration
 type Config struct {
 	Server *Server  `yaml:"server"`
-	Slaves []Server `yaml:"slaves"`
+	Slaves []string `yaml:"slaves"`
 	Tags   []string `yaml:"tags"`
 }
 

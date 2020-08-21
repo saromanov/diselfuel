@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/apex/log"
 	"github.com/hashicorp/serf/serf"
 	"github.com/saromanov/diselfuel/internal/config"
 	"github.com/saromanov/diselfuel/internal/discovery"
@@ -23,24 +22,11 @@ type Service struct {
 
 // New provides initialization of master
 func New(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
-	if conf.Server.Type == "master" {
-		c, _, err := newService(conf, log)
-		return c, err
-	}
-	return newSlave(conf, log)
-}
-
-// NewSlave provides initialization of the slave service
-// with registration of the new client
-func newSlave(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
-	s, client, err := newService(conf, log)
-	if err != nil {
+	c, client, err := newService(conf, log)
+	if _, err := client.Join(conf.Slaves, true); err != nil {
 		return nil, err
 	}
-	if err := join(client, conf); err != nil {
-		return nil, fmt.Errorf("unable to join nodes")
-	}
-	return s, nil
+	return c, err
 }
 
 // general method for initialization of service
@@ -90,21 +76,7 @@ func addTags(t []string) map[string]string {
 
 // join provides joining of children nodes to network
 func join(c *serf.Serf, conf *config.Config) error {
-	if len(conf.Slaves) == 0 {
-		return nil
-	}
-
-	nodes := []string{}
-	for _, s := range conf.Slaves {
-		log.Infof("Joining of nodes to the network: %s", s.Name)
-		nodes = append(nodes, fmt.Sprintf("%s:%d", s.Address, s.Port))
-	}
-
-	if len(nodes) == 0 {
-		log.Infof("Network not contains any nodes")
-		return nil
-	}
-	if _, err := c.Join(nodes, true); err != nil {
+	if _, err := c.Join([]string{fmt.Sprintf("%s:%d", conf.Server.Address, conf.Server.Port)}, true); err != nil {
 		return fmt.Errorf("unable to join nodes: %v", err)
 	}
 	return nil
