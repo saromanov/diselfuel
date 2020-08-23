@@ -103,10 +103,11 @@ func list(c *cli.Context) error {
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to load config")
 	}
-	address := "http://127.0.0.1:8081"
-	if addressFlag != "" {
-		address = addressFlag
+	address := c.String("address")
+	if address == "" {
+		logrus.Fatal("address is not defined")
 	}
+	address = makeAddress(address)
 	item := client.New(conf, address)
 	resp, err := item.GetList()
 	if err != nil {
