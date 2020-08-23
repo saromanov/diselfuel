@@ -24,7 +24,7 @@ type Service struct {
 func New(conf *config.Config, log *logrus.Logger) (discovery.Discovery, error) {
 	c, client, err := newService(conf, log)
 	if _, err := client.Join(conf.Slaves, true); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unable to join slaves: %v", err)
 	}
 	return c, err
 }

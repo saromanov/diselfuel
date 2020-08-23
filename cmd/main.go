@@ -98,7 +98,6 @@ func makeAddress(address string) string {
 
 // list returns list of nodes
 func list(c *cli.Context) error {
-	addressFlag := c.String("address")
 	conf, err := config.Load("config.yaml")
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to load config")
