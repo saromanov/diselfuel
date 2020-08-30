@@ -139,7 +139,3 @@ func findInTags(tag string, tags []string) bool {
 	}
 	return false
 }
-
-func (s *Service) Start() {
-
-}

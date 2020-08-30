@@ -4,6 +4,7 @@ package exec
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/sfreiberg/simplessh"
 )
@@ -16,7 +17,7 @@ var (
 )
 
 // Run provides execution of command
-func Run(command, address, user, path string) ([]byte, error) {
+func Run(command, address, user, privKeys, path string) ([]byte, error) {
 	if command == "" {
 		return nil, errNoCommand
 	}
@@ -29,10 +30,21 @@ func Run(command, address, user, path string) ([]byte, error) {
 	if path == "" {
 		return nil, errNoPath
 	}
-	client, err := simplessh.ConnectWithPassword(address, "testing", "Nnc8Audm6Ai")
-	//client, err := simplessh.ConnectWithKeyFile(address, user, fmt.Sprintf("/home/%s/.ssh/id_rsa", "default"))
+	var (
+		client *simplessh.Client
+		err    error
+	)
+
+	if privKeys != "" {
+		client, err = simplessh.ConnectWithKeyFile(address, user, fmt.Sprintf("/home/%s/.ssh/id_rsa", "default"))
+	} else {
+		client, err = simplessh.ConnectWithPassword(address, "testing", "Nnc8Audm6Ai")
+	}
 	if err != nil {
 		return nil, err
+	}
+	if client == nil {
+		return nil, fmt.Errorf("unable to init ssh client")
 	}
 	defer client.Close()
 

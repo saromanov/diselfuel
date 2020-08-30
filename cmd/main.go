@@ -123,7 +123,6 @@ func list(c *cli.Context) error {
 }
 
 func apply(c *cli.Context) error {
-	addressFlag := c.String("address")
 	conf, err := config.Load("config.yaml")
 	if err != nil {
 		logrus.WithError(err).Fatal("unable to load config")
@@ -136,10 +135,11 @@ func apply(c *cli.Context) error {
 	if err != nil {
 		logrus.WithError(err).Fatalf("unable to load exec config: %v", err)
 	}
-	address := "http://127.0.0.1:8081"
-	if addressFlag != "" {
-		address = addressFlag
+	address := c.String("address")
+	if address == "" {
+		logrus.Fatal("address is not defined")
 	}
+	address = makeAddress(address)
 	item := client.New(conf, address)
 	_, err = item.Apply(&models.Execution{
 		Tasks: convertTasks(execConf.Tasks),

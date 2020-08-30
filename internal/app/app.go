@@ -82,7 +82,7 @@ func (a *App) exec(hosts []*models.Host, query, command string) ([]*models.Exec,
 				done <- struct{}{}
 				wg.Done()
 			}()
-			result, err := exec.Run(command, host.Address, host.User, query)
+			result, err := exec.Run(command, host.Address, host.User, host.PrivKeys, query)
 			if err != nil {
 				mux.Lock()
 				response = append(response, &models.Exec{Status: models.Failed, Error: err.Error(), Host: host.Address, Name: host.Name})
