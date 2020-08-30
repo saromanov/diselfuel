@@ -49,9 +49,9 @@ func exec(c *cli.Context) error {
 	if args.Len() < 2 {
 		logrus.Fatal("not enough arguments")
 	}
-	address := c.String("address")
+	address := c.String("master")
 	if address == "" {
-		logrus.Fatal("address is not defined")
+		logrus.Fatal("address for master server is not defined")
 	}
 	address = makeAddress(address)
 
@@ -173,9 +173,9 @@ func main() {
 		Usage: "Starting of the app",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "address",
+				Name:  "master",
 				Value: "",
-				Usage: "address of the server for execution",
+				Usage: "address of the master server for execution",
 			},
 			&cli.StringFlag{
 				Name:  "config",
