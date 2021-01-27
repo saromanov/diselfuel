@@ -14,6 +14,9 @@ type Cache struct {
 
 // New provides initialization of the cache
 func New(с *config.Config) *Cache {
+	if c == nil {
+		panic("config is not defined")
+	}
 	return &Cache{
 		c: cache.New(c.CacheTimeout, c.CacheTimeout),
 	}
